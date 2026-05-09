@@ -1,32 +1,38 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import emailjs from '@emailjs/browser'
 import { personalInfo } from '../data/portfolio.js'
 import {
   fadeUp, fadeLeft, fadeRight, blurIn,
-  staggerContainer, staggerFast, cardReveal,
-  ease, viewport
+  staggerContainer, ease, viewport
 } from '../utils/animations.js'
+
+// ─── REPLACE THESE 3 VALUES WITH YOUR EMAILJS CREDENTIALS ───────
+const EMAILJS_SERVICE_ID = 'kartik_portfolio'
+const EMAILJS_TEMPLATE_ID = 'template_7c774wm'
+const EMAILJS_PUBLIC_KEY = '2yXOH3qlgMJZ8S5QT'
+// ────────────────────────────────────────────────────────────────
 
 const contactLinks = [
   {
-    icon: '✉️',
-    label: 'Email',
-    display: personalInfo.email,
-    href: `mailto:${personalInfo.email}`,
+    icon:     '✉️',
+    label:    'Email',
+    display:  personalInfo.email,
+    href:     `mailto:${personalInfo.email}`,
     external: false,
   },
   {
-    icon: '💼',
-    label: 'LinkedIn',
-    display: 'kartik-khandelwal',
-    href: personalInfo.linkedin,
+    icon:     '💼',
+    label:    'LinkedIn',
+    display:  'kartik-khandelwal',
+    href:     personalInfo.linkedin,
     external: true,
   },
   {
-    icon: '🐙',
-    label: 'GitHub',
-    display: 'kartikkh1607',
-    href: personalInfo.github,
+    icon:     '🐙',
+    label:    'GitHub',
+    display:  'kartikkh1607',
+    href:     personalInfo.github,
     external: true,
   },
 ]
@@ -53,10 +59,10 @@ function InputField({ label, name, value, onChange, type = 'text', placeholder, 
         onBlur={() =>  setFocused(false)}
         className="rounded-xl px-4 py-3 text-sm font-light outline-none transition-all duration-300"
         style={{
-          background:  focused ? 'rgba(7,17,31,0.9)' : 'rgba(7,17,31,0.7)',
-          border:      `1px solid ${focused ? 'rgba(45,212,191,0.35)' : 'rgba(30,58,82,0.7)'}`,
-          boxShadow:   focused ? '0 0 0 3px rgba(45,212,191,0.06)' : 'none',
-          color:       '#e2e8f0',
+          background: focused ? 'rgba(7,17,31,0.9)' : 'rgba(7,17,31,0.7)',
+          border:     `1px solid ${focused ? 'rgba(45,212,191,0.35)' : 'rgba(30,58,82,0.7)'}`,
+          boxShadow:  focused ? '0 0 0 3px rgba(45,212,191,0.06)' : 'none',
+          color:      '#e2e8f0',
         }}
       />
     </div>
@@ -86,10 +92,10 @@ function TextAreaField({ label, name, value, onChange, placeholder, required, ro
         className="rounded-xl px-4 py-3 text-sm font-light outline-none
                    transition-all duration-300 resize-none"
         style={{
-          background:  focused ? 'rgba(7,17,31,0.9)' : 'rgba(7,17,31,0.7)',
-          border:      `1px solid ${focused ? 'rgba(45,212,191,0.35)' : 'rgba(30,58,82,0.7)'}`,
-          boxShadow:   focused ? '0 0 0 3px rgba(45,212,191,0.06)' : 'none',
-          color:       '#e2e8f0',
+          background: focused ? 'rgba(7,17,31,0.9)' : 'rgba(7,17,31,0.7)',
+          border:     `1px solid ${focused ? 'rgba(45,212,191,0.35)' : 'rgba(30,58,82,0.7)'}`,
+          boxShadow:  focused ? '0 0 0 3px rgba(45,212,191,0.06)' : 'none',
+          color:      '#e2e8f0',
         }}
       />
     </div>
@@ -98,22 +104,33 @@ function TextAreaField({ label, name, value, onChange, placeholder, required, ro
 
 export default function Contact() {
   const [form,   setForm]   = useState({ name: '', email: '', message: '' })
-  const [status, setStatus] = useState('idle')
+  const [status, setStatus] = useState('idle') // idle | sending | sent | error
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setStatus('sending')
-    const subject = encodeURIComponent(`Portfolio Contact from ${form.name}`)
-    const body    = encodeURIComponent(
-      `Name: ${form.name}\nEmail: ${form.email}\n\nMessage:\n${form.message}`
-    )
-    window.open(`mailto:${personalInfo.email}?subject=${subject}&body=${body}`)
-    setStatus('sent')
-    setForm({ name: '', email: '', message: '' })
+
+    try {
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          from_name:  form.name,
+          from_email: form.email,
+          message:    form.message,
+        },
+        EMAILJS_PUBLIC_KEY
+      )
+      setStatus('sent')
+      setForm({ name: '', email: '', message: '' })
+    } catch (err) {
+      console.error('EmailJS error:', err)
+      setStatus('error')
+    }
   }
 
   return (
@@ -280,8 +297,8 @@ export default function Contact() {
                       {link.label}
                     </p>
                     <p
-                      className="text-sm font-medium truncate transition-colors duration-200
-                                 group-hover:text-mint-400"
+                      className="text-sm font-medium truncate transition-colors
+                                 duration-200 group-hover:text-mint-400"
                       style={{ color: '#94a3b8' }}
                     >
                       {link.display}
@@ -340,8 +357,8 @@ export default function Contact() {
                 }}
               />
 
-              {status === 'sent' ? (
-
+              {/* ── SENT STATE ── */}
+              {status === 'sent' && (
                 <motion.div
                   className="flex flex-col items-center justify-center py-20 gap-5"
                   initial={{ opacity: 0, scale: 0.92 }}
@@ -349,8 +366,7 @@ export default function Contact() {
                   transition={{ duration: 0.5, ease: ease.outExpo }}
                 >
                   <motion.div
-                    className="w-16 h-16 rounded-full flex items-center
-                               justify-center text-3xl"
+                    className="w-16 h-16 rounded-full flex items-center justify-center text-3xl"
                     style={{
                       background: 'rgba(45,212,191,0.08)',
                       border:     '1px solid rgba(45,212,191,0.25)',
@@ -378,8 +394,8 @@ export default function Contact() {
                     animate={{ opacity: 1, y: 0  }}
                     transition={{ delay: 0.35, ease: ease.outExpo }}
                   >
-                    Your email client should have opened.
-                    I'll get back to you soon.
+                    Thanks for reaching out! I'll get back
+                    to you as soon as possible.
                   </motion.p>
 
                   <motion.button
@@ -393,11 +409,72 @@ export default function Contact() {
                   >
                     Send Another
                   </motion.button>
-
                 </motion.div>
+              )}
 
-              ) : (
+              {/* ── ERROR STATE ── */}
+              {status === 'error' && (
+                <motion.div
+                  className="flex flex-col items-center justify-center py-20 gap-5"
+                  initial={{ opacity: 0, scale: 0.92 }}
+                  animate={{ opacity: 1, scale: 1   }}
+                  transition={{ duration: 0.5, ease: ease.outExpo }}
+                >
+                  <motion.div
+                    className="w-16 h-16 rounded-full flex items-center justify-center text-3xl"
+                    style={{
+                      background: 'rgba(248,113,113,0.08)',
+                      border:     '1px solid rgba(248,113,113,0.25)',
+                    }}
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 20, delay: 0.1 }}
+                  >
+                    ❌
+                  </motion.div>
 
+                  <motion.p
+                    className="font-display text-xl font-bold text-white"
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0  }}
+                    transition={{ delay: 0.2, ease: ease.outExpo }}
+                  >
+                    Something went wrong.
+                  </motion.p>
+
+                  <motion.p
+                    className="font-light text-center text-sm max-w-xs"
+                    style={{ color: '#64748b' }}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0  }}
+                    transition={{ delay: 0.3, ease: ease.outExpo }}
+                  >
+                    Please email me directly at{' '}
+                    <a
+                      href={`mailto:${personalInfo.email}`}
+                      className="font-medium underline underline-offset-2"
+                      style={{ color: '#2dd4bf' }}
+                    >
+                      {personalInfo.email}
+                    </a>
+                  </motion.p>
+
+                  <motion.button
+                    onClick={() => setStatus('idle')}
+                    className="btn-outline mt-2"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.4 }}
+                    whileHover={{ scale: 1.04, y: -2 }}
+                    whileTap={{  scale: 0.97  }}
+                  >
+                    Try Again
+                  </motion.button>
+                </motion.div>
+              )}
+
+              {/* ── FORM ── */}
+              {(status === 'idle' || status === 'sending') && (
                 <motion.form
                   onSubmit={handleSubmit}
                   className="flex flex-col gap-5 relative z-10"
@@ -450,19 +527,32 @@ export default function Contact() {
                       type="submit"
                       disabled={status === 'sending'}
                       className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
-                      whileHover={{ scale: 1.04, y: -2 }}
-                      whileTap={{  scale: 0.97  }}
+                      whileHover={status !== 'sending' ? { scale: 1.04, y: -2 } : {}}
+                      whileTap={status  !== 'sending' ? { scale: 0.97  } : {}}
                     >
-                      {status === 'sending' ? 'Opening...' : 'Send Message'}
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                          d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                      </svg>
+                      {status === 'sending' ? (
+                        <>
+                          <motion.span
+                            className="inline-block w-4 h-4 border-2 rounded-full"
+                            style={{ borderColor: '#050d18', borderTopColor: 'transparent' }}
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
+                          />
+                          Sending...
+                        </>
+                      ) : (
+                        <>
+                          Send Message
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                              d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                          </svg>
+                        </>
+                      )}
                     </motion.button>
                   </motion.div>
 
                 </motion.form>
-
               )}
 
             </div>
