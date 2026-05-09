@@ -2,33 +2,99 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { personalInfo } from '../data/portfolio.js'
 import {
-  fadeUp, fadeLeft, fadeRight,
-  staggerContainer, scaleIn, viewport
+  fadeUp, fadeLeft, fadeRight, blurIn,
+  staggerContainer, staggerFast, cardReveal,
+  ease, viewport
 } from '../utils/animations.js'
 
 const contactLinks = [
   {
     icon: '✉️',
     label: 'Email',
-    value: personalInfo.email,
+    display: personalInfo.email,
     href: `mailto:${personalInfo.email}`,
-    short: personalInfo.email,
+    external: false,
   },
   {
     icon: '💼',
     label: 'LinkedIn',
-    value: 'Kartik Khandelwal',
+    display: 'kartik-khandelwal',
     href: personalInfo.linkedin,
-    short: 'kartik-khandelwal',
+    external: true,
   },
   {
     icon: '🐙',
     label: 'GitHub',
-    value: 'kartikkh1607',
+    display: 'kartikkh1607',
     href: personalInfo.github,
-    short: 'kartikkh1607',
+    external: true,
   },
 ]
+
+function InputField({ label, name, value, onChange, type = 'text', placeholder, required }) {
+  const [focused, setFocused] = useState(false)
+
+  return (
+    <div className="flex flex-col gap-2">
+      <label
+        className="font-mono text-2xs uppercase tracking-widest"
+        style={{ color: focused ? '#2dd4bf' : '#334155', transition: 'color 0.2s' }}
+      >
+        {label}
+      </label>
+      <input
+        type={type}
+        name={name}
+        value={value}
+        onChange={onChange}
+        required={required}
+        placeholder={placeholder}
+        onFocus={() => setFocused(true)}
+        onBlur={() =>  setFocused(false)}
+        className="rounded-xl px-4 py-3 text-sm font-light outline-none transition-all duration-300"
+        style={{
+          background:  focused ? 'rgba(7,17,31,0.9)' : 'rgba(7,17,31,0.7)',
+          border:      `1px solid ${focused ? 'rgba(45,212,191,0.35)' : 'rgba(30,58,82,0.7)'}`,
+          boxShadow:   focused ? '0 0 0 3px rgba(45,212,191,0.06)' : 'none',
+          color:       '#e2e8f0',
+        }}
+      />
+    </div>
+  )
+}
+
+function TextAreaField({ label, name, value, onChange, placeholder, required, rows = 5 }) {
+  const [focused, setFocused] = useState(false)
+
+  return (
+    <div className="flex flex-col gap-2">
+      <label
+        className="font-mono text-2xs uppercase tracking-widest"
+        style={{ color: focused ? '#2dd4bf' : '#334155', transition: 'color 0.2s' }}
+      >
+        {label}
+      </label>
+      <textarea
+        name={name}
+        value={value}
+        onChange={onChange}
+        required={required}
+        rows={rows}
+        placeholder={placeholder}
+        onFocus={() => setFocused(true)}
+        onBlur={() =>  setFocused(false)}
+        className="rounded-xl px-4 py-3 text-sm font-light outline-none
+                   transition-all duration-300 resize-none"
+        style={{
+          background:  focused ? 'rgba(7,17,31,0.9)' : 'rgba(7,17,31,0.7)',
+          border:      `1px solid ${focused ? 'rgba(45,212,191,0.35)' : 'rgba(30,58,82,0.7)'}`,
+          boxShadow:   focused ? '0 0 0 3px rgba(45,212,191,0.06)' : 'none',
+          color:       '#e2e8f0',
+        }}
+      />
+    </div>
+  )
+}
 
 export default function Contact() {
   const [form,   setForm]   = useState({ name: '', email: '', message: '' })
@@ -54,24 +120,30 @@ export default function Contact() {
     <section
       id="contact"
       className="section-padding relative overflow-hidden"
-      style={{ background: 'rgba(5,13,24,0.9)' }}
+      style={{ background: 'rgba(5,13,24,0.8)' }}
     >
 
-      {/* Ambient orbs */}
+      {/* Atmosphere */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse 80% 40% at 50% 0%, rgba(45,212,191,0.04), transparent)',
+        }}
+      />
       <div
         className="absolute top-0 left-1/2 w-[600px] h-[300px] pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse, rgba(45,212,191,0.06), transparent 70%)',
-          filter: 'blur(60px)',
-          transform: 'translate(-50%, -40%)',
+          background: 'radial-gradient(ellipse, rgba(45,212,191,0.05), transparent 70%)',
+          filter:     'blur(60px)',
+          transform:  'translate(-50%, -50%)',
         }}
       />
       <div
         className="absolute bottom-0 right-0 w-[400px] h-[400px] pointer-events-none"
         style={{
-          background: 'radial-gradient(circle, rgba(56,189,248,0.04), transparent 70%)',
-          filter: 'blur(60px)',
-          transform: 'translate(30%, 30%)',
+          background: 'radial-gradient(circle, rgba(56,189,248,0.03), transparent 70%)',
+          filter:     'blur(80px)',
+          transform:  'translate(30%, 30%)',
         }}
       />
 
@@ -88,7 +160,11 @@ export default function Contact() {
           <motion.p variants={fadeUp} className="section-label">
             04 — contact
           </motion.p>
-          <motion.h2 variants={fadeUp} className="section-title">
+          <motion.h2
+            variants={blurIn}
+            className="font-display font-bold tracking-tight text-white mb-4"
+            style={{ fontSize: 'clamp(2rem, 4vw, 3.25rem)', lineHeight: '1.1' }}
+          >
             Let's Work Together
           </motion.h2>
           <motion.p variants={fadeUp} className="section-sub">
@@ -99,84 +175,96 @@ export default function Contact() {
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
 
-          {/* Left Side */}
+          {/* ── Left ── */}
           <motion.div
-            className="lg:col-span-2 flex flex-col gap-5"
+            className="lg:col-span-2 flex flex-col gap-4"
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
             viewport={viewport}
           >
 
-            {/* Availability Card */}
+            {/* Availability */}
             <motion.div
               variants={fadeLeft}
               whileHover={{
-                scale: 1.01,
-                borderColor: 'rgba(45,212,191,0.3)',
-                boxShadow: '0 0 40px rgba(45,212,191,0.08)',
-                transition: { duration: 0.2 },
+                borderColor: 'rgba(45,212,191,0.22)',
+                boxShadow:   '0 0 40px rgba(45,212,191,0.05)',
+                transition:  { duration: 0.25 },
               }}
-              className="rounded-2xl p-6"
+              className="rounded-2xl p-6 relative overflow-hidden"
               style={{
-                background: 'rgba(45,212,191,0.04)',
-                border: '1px solid rgba(45,212,191,0.15)',
-                backdropFilter: 'blur(16px)',
+                background:     'rgba(45,212,191,0.03)',
+                border:         '1px solid rgba(45,212,191,0.1)',
+                backdropFilter: 'blur(20px)',
               }}
             >
-              <div className="flex items-center gap-2 mb-3">
+              <div
+                className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+                style={{
+                  background: 'linear-gradient(90deg, transparent, rgba(45,212,191,0.25), transparent)',
+                }}
+              />
+
+              <div className="flex items-center gap-2.5 mb-3">
                 <motion.span
                   className="w-2 h-2 rounded-full"
                   style={{ background: '#2dd4bf' }}
-                  animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
-                  transition={{ duration: 2, repeat: Infinity }}
+                  animate={{ scale: [1, 1.5, 1], opacity: [1, 0.4, 1] }}
+                  transition={{ duration: 2.5, repeat: Infinity }}
                 />
-                <span className="font-mono text-xs uppercase tracking-widest"
-                  style={{ color: '#2dd4bf' }}>
+                <span
+                  className="font-mono text-2xs uppercase tracking-widest"
+                  style={{ color: '#2dd4bf' }}
+                >
                   Available Now
                 </span>
               </div>
-              <p className="font-light text-sm leading-relaxed"
-                style={{ color: '#b8d4e3' }}>
+
+              <p
+                className="font-light text-sm leading-relaxed"
+                style={{ color: '#64748b' }}
+              >
                 Open to{' '}
-                <span className="font-semibold text-white">
+                <span className="text-white font-medium">
                   Android internships
                 </span>
                 , freelance mobile projects, and open-source
                 collaborations.
               </p>
+
             </motion.div>
 
             {/* Contact Links */}
             <div className="flex flex-col gap-3">
-              {contactLinks.map((link, i) => (
+              {contactLinks.map((link) => (
                 <motion.a
                   key={link.label}
                   href={link.href}
-                  target={link.label !== 'Email' ? '_blank' : undefined}
-                  rel={link.label !== 'Email' ? 'noopener noreferrer' : undefined}
+                  target={link.external ? '_blank' : undefined}
+                  rel={link.external ? 'noopener noreferrer' : undefined}
                   variants={fadeLeft}
                   whileHover={{
-                    scale: 1.02,
-                    y: -2,
-                    borderColor: 'rgba(45,212,191,0.3)',
-                    boxShadow: '0 8px 30px rgba(0,0,0,0.3)',
-                    transition: { duration: 0.2 },
+                    y:           -3,
+                    borderColor: 'rgba(45,212,191,0.25)',
+                    boxShadow:   '0 8px 32px rgba(0,0,0,0.3)',
+                    transition:  { duration: 0.2 },
                   }}
                   whileTap={{ scale: 0.98 }}
                   className="flex items-center gap-4 rounded-xl p-4 group"
                   style={{
-                    background: 'rgba(15,32,53,0.6)',
-                    border: '1px solid rgba(30,58,82,0.8)',
-                    backdropFilter: 'blur(12px)',
+                    background:     'rgba(15,32,53,0.5)',
+                    border:         '1px solid rgba(30,58,82,0.7)',
+                    backdropFilter: 'blur(16px)',
                   }}
                 >
+
                   <motion.div
                     className="w-10 h-10 rounded-xl flex items-center
                                justify-center text-lg flex-shrink-0"
                     style={{
-                      background: 'rgba(45,212,191,0.08)',
-                      border: '1px solid rgba(45,212,191,0.15)',
+                      background: 'rgba(45,212,191,0.06)',
+                      border:     '1px solid rgba(45,212,191,0.12)',
                     }}
                     whileHover={{ scale: 1.1, rotate: 5 }}
                     transition={{ duration: 0.2 }}
@@ -185,26 +273,33 @@ export default function Contact() {
                   </motion.div>
 
                   <div className="flex-1 min-w-0">
-                    <p className="font-mono text-xs uppercase tracking-wider mb-0.5"
-                      style={{ color: '#4a7a9b' }}>
+                    <p
+                      className="font-mono text-2xs uppercase tracking-widest mb-0.5"
+                      style={{ color: '#334155' }}
+                    >
                       {link.label}
                     </p>
-                    <p className="text-sm font-medium truncate transition-colors duration-200"
-                      style={{ color: '#b8d4e3' }}
-                      className="group-hover:text-mint-400">
-                      {link.short}
+                    <p
+                      className="text-sm font-medium truncate transition-colors duration-200
+                                 group-hover:text-mint-400"
+                      style={{ color: '#94a3b8' }}
+                    >
+                      {link.display}
                     </p>
                   </div>
 
-                  <svg
-                    className="w-4 h-4 flex-shrink-0 opacity-0 group-hover:opacity-100
-                               transition-all duration-200 -translate-x-1 group-hover:translate-x-0"
+                  <motion.svg
+                    className="w-4 h-4 flex-shrink-0"
                     style={{ color: '#2dd4bf' }}
-                    fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    initial={{ opacity: 0, x: -4 }}
+                    whileHover={{ opacity: 1, x: 0 }}
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                       d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
+                  </motion.svg>
 
                 </motion.a>
               ))}
@@ -212,7 +307,7 @@ export default function Contact() {
 
           </motion.div>
 
-          {/* Right Side — Form */}
+          {/* ── Right — Form ── */}
           <motion.div
             className="lg:col-span-3"
             variants={fadeRight}
@@ -223,9 +318,9 @@ export default function Contact() {
             <div
               className="rounded-2xl p-8 relative overflow-hidden"
               style={{
-                background: 'rgba(15,32,53,0.6)',
-                border: '1px solid rgba(30,58,82,0.8)',
-                backdropFilter: 'blur(16px)',
+                background:     'rgba(12,26,46,0.6)',
+                border:         '1px solid rgba(30,58,82,0.7)',
+                backdropFilter: 'blur(20px)',
               }}
             >
 
@@ -233,185 +328,141 @@ export default function Contact() {
               <div
                 className="absolute top-0 left-0 right-0 h-px pointer-events-none"
                 style={{
-                  background: 'linear-gradient(90deg, transparent, rgba(45,212,191,0.3), transparent)',
+                  background: 'linear-gradient(90deg, transparent, rgba(45,212,191,0.25), transparent)',
+                }}
+              />
+
+              {/* Inner ambient */}
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: 'radial-gradient(ellipse at top, rgba(45,212,191,0.02), transparent 60%)',
                 }}
               />
 
               {status === 'sent' ? (
 
                 <motion.div
-                  className="flex flex-col items-center justify-center py-16 gap-4"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.4 }}
+                  className="flex flex-col items-center justify-center py-20 gap-5"
+                  initial={{ opacity: 0, scale: 0.92 }}
+                  animate={{ opacity: 1, scale: 1   }}
+                  transition={{ duration: 0.5, ease: ease.outExpo }}
                 >
                   <motion.div
-                    className="w-16 h-16 rounded-full flex items-center justify-center text-3xl"
+                    className="w-16 h-16 rounded-full flex items-center
+                               justify-center text-3xl"
                     style={{
-                      background: 'rgba(45,212,191,0.1)',
-                      border: '1px solid rgba(45,212,191,0.3)',
+                      background: 'rgba(45,212,191,0.08)',
+                      border:     '1px solid rgba(45,212,191,0.25)',
                     }}
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
+                    initial={{ scale: 0, rotate: -180 }}
+                    animate={{ scale: 1, rotate: 0    }}
                     transition={{ type: 'spring', stiffness: 300, damping: 20, delay: 0.1 }}
                   >
                     ✅
                   </motion.div>
+
                   <motion.p
                     className="font-display text-xl font-bold text-white"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0  }}
+                    transition={{ delay: 0.25, ease: ease.outExpo }}
                   >
                     Message Sent!
                   </motion.p>
+
                   <motion.p
-                    className="font-light text-center text-sm"
-                    style={{ color: '#7fb3cc' }}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
+                    className="font-light text-center text-sm max-w-xs"
+                    style={{ color: '#64748b' }}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0  }}
+                    transition={{ delay: 0.35, ease: ease.outExpo }}
                   >
                     Your email client should have opened.
                     I'll get back to you soon.
                   </motion.p>
+
                   <motion.button
                     onClick={() => setStatus('idle')}
                     className="btn-outline mt-2"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 0.4 }}
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    whileTap={{ scale: 0.96 }}
+                    transition={{ delay: 0.45 }}
+                    whileHover={{ scale: 1.04, y: -2 }}
+                    whileTap={{  scale: 0.97  }}
                   >
                     Send Another
                   </motion.button>
+
                 </motion.div>
 
               ) : (
 
-                <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+                <motion.form
+                  onSubmit={handleSubmit}
+                  className="flex flex-col gap-5 relative z-10"
+                  variants={staggerContainer}
+                  initial="hidden"
+                  animate="visible"
+                >
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
 
-                    {/* Name */}
-                    <motion.div
-                      className="flex flex-col gap-2"
-                      variants={fadeUp}
-                    >
-                      <label className="font-mono text-xs uppercase tracking-wider"
-                        style={{ color: '#4a7a9b' }}>
-                        Your Name
-                      </label>
-                      <input
-                        type="text"
+                    <motion.div variants={fadeUp}>
+                      <InputField
+                        label="Your Name"
                         name="name"
                         value={form.name}
                         onChange={handleChange}
-                        required
                         placeholder="John Doe"
-                        className="rounded-xl px-4 py-3 text-sm font-light
-                                   outline-none transition-all duration-200"
-                        style={{
-                          background: 'rgba(7,17,31,0.8)',
-                          border: '1px solid rgba(30,58,82,0.8)',
-                          color: '#e2e8f0',
-                        }}
-                        onFocus={e => {
-                          e.target.style.borderColor = 'rgba(45,212,191,0.4)'
-                          e.target.style.boxShadow   = '0 0 20px rgba(45,212,191,0.08)'
-                        }}
-                        onBlur={e => {
-                          e.target.style.borderColor = 'rgba(30,58,82,0.8)'
-                          e.target.style.boxShadow   = 'none'
-                        }}
+                        required
                       />
                     </motion.div>
 
-                    {/* Email */}
-                    <motion.div
-                      className="flex flex-col gap-2"
-                      variants={fadeUp}
-                    >
-                      <label className="font-mono text-xs uppercase tracking-wider"
-                        style={{ color: '#4a7a9b' }}>
-                        Email Address
-                      </label>
-                      <input
-                        type="email"
+                    <motion.div variants={fadeUp}>
+                      <InputField
+                        label="Email Address"
                         name="email"
+                        type="email"
                         value={form.email}
                         onChange={handleChange}
-                        required
                         placeholder="john@example.com"
-                        className="rounded-xl px-4 py-3 text-sm font-light
-                                   outline-none transition-all duration-200"
-                        style={{
-                          background: 'rgba(7,17,31,0.8)',
-                          border: '1px solid rgba(30,58,82,0.8)',
-                          color: '#e2e8f0',
-                        }}
-                        onFocus={e => {
-                          e.target.style.borderColor = 'rgba(45,212,191,0.4)'
-                          e.target.style.boxShadow   = '0 0 20px rgba(45,212,191,0.08)'
-                        }}
-                        onBlur={e => {
-                          e.target.style.borderColor = 'rgba(30,58,82,0.8)'
-                          e.target.style.boxShadow   = 'none'
-                        }}
+                        required
                       />
                     </motion.div>
 
                   </div>
 
-                  {/* Message */}
-                  <motion.div className="flex flex-col gap-2" variants={fadeUp}>
-                    <label className="font-mono text-xs uppercase tracking-wider"
-                      style={{ color: '#4a7a9b' }}>
-                      Message
-                    </label>
-                    <textarea
+                  <motion.div variants={fadeUp}>
+                    <TextAreaField
+                      label="Message"
                       name="message"
                       value={form.message}
                       onChange={handleChange}
+                      placeholder="Tell me about your project or opportunity..."
                       required
                       rows={5}
-                      placeholder="Tell me about your project or opportunity..."
-                      className="rounded-xl px-4 py-3 text-sm font-light
-                                 outline-none transition-all duration-200 resize-none"
-                      style={{
-                        background: 'rgba(7,17,31,0.8)',
-                        border: '1px solid rgba(30,58,82,0.8)',
-                        color: '#e2e8f0',
-                      }}
-                      onFocus={e => {
-                        e.target.style.borderColor = 'rgba(45,212,191,0.4)'
-                        e.target.style.boxShadow   = '0 0 20px rgba(45,212,191,0.08)'
-                      }}
-                      onBlur={e => {
-                        e.target.style.borderColor = 'rgba(30,58,82,0.8)'
-                        e.target.style.boxShadow   = 'none'
-                      }}
                     />
                   </motion.div>
 
-                  {/* Submit */}
-                  <motion.button
-                    type="submit"
-                    disabled={status === 'sending'}
-                    className="btn-primary self-start disabled:opacity-60
-                               disabled:cursor-not-allowed"
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    whileTap={{ scale: 0.96 }}
-                  >
-                    {status === 'sending' ? 'Opening...' : 'Send Message'}
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                    </svg>
-                  </motion.button>
+                  <motion.div variants={fadeUp}>
+                    <motion.button
+                      type="submit"
+                      disabled={status === 'sending'}
+                      className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                      whileHover={{ scale: 1.04, y: -2 }}
+                      whileTap={{  scale: 0.97  }}
+                    >
+                      {status === 'sending' ? 'Opening...' : 'Send Message'}
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                          d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                      </svg>
+                    </motion.button>
+                  </motion.div>
 
-                </form>
+                </motion.form>
+
               )}
 
             </div>

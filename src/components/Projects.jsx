@@ -1,9 +1,32 @@
 import { motion } from 'framer-motion'
 import { projects } from '../data/portfolio.js'
 import {
-  fadeUp, fadeLeft, fadeRight,
-  staggerContainer, scaleIn, viewport
+  fadeUp, fadeLeft, fadeRight, blurIn,
+  staggerContainer, staggerFast, cardReveal,
+  scaleIn, ease, viewport
 } from '../utils/animations.js'
+
+function TechTag({ tech, index }) {
+  return (
+    <motion.span
+      initial={{ opacity: 0, scale: 0.85 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={viewport}
+      transition={{ delay: 0.15 + index * 0.05, ease: ease.outExpo }}
+      whileHover={{
+        scale:       1.08,
+        y:           -2,
+        color:       '#2dd4bf',
+        borderColor: 'rgba(45,212,191,0.35)',
+        background:  'rgba(45,212,191,0.06)',
+        transition:  { duration: 0.15 },
+      }}
+      className="tag cursor-default"
+    >
+      {tech}
+    </motion.span>
+  )
+}
 
 function FeaturedProject({ project }) {
   return (
@@ -12,117 +35,116 @@ function FeaturedProject({ project }) {
       initial="hidden"
       whileInView="visible"
       viewport={viewport}
-      className="relative rounded-3xl overflow-hidden mb-8 group"
+      className="relative rounded-3xl overflow-hidden mb-6 group"
       style={{
-        background: 'rgba(15,32,53,0.7)',
-        border: '1px solid rgba(30,58,82,0.8)',
-        backdropFilter: 'blur(16px)',
+        background:     'rgba(12,26,46,0.7)',
+        border:         '1px solid rgba(30,58,82,0.7)',
+        backdropFilter: 'blur(20px)',
       }}
       whileHover={{
-        borderColor: 'rgba(45,212,191,0.25)',
-        boxShadow: '0 30px 80px rgba(0,0,0,0.5), 0 0 60px rgba(45,212,191,0.08)',
-        transition: { duration: 0.3 },
+        borderColor: 'rgba(45,212,191,0.2)',
+        boxShadow:   '0 32px 80px rgba(0,0,0,0.5), 0 0 60px rgba(45,212,191,0.05)',
+        transition:  { duration: 0.35 },
       }}
     >
-      {/* Top glow line */}
+
+      {/* Top gradient line */}
       <div
-        className="absolute top-0 left-0 right-0 h-px"
+        className="absolute top-0 left-0 right-0 h-px pointer-events-none"
         style={{
-          background: 'linear-gradient(90deg, transparent, rgba(45,212,191,0.5), transparent)',
+          background: 'linear-gradient(90deg, transparent 0%, rgba(45,212,191,0.5) 50%, transparent 100%)',
         }}
       />
 
       {/* Featured badge */}
-      <div className="absolute top-6 right-6 z-10">
-        <motion.span
-          initial={{ opacity: 0, x: 20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={viewport}
-          transition={{ delay: 0.4 }}
-          className="font-mono text-xs px-3 py-1.5 rounded-full"
+      <motion.div
+        className="absolute top-6 right-6 z-20"
+        initial={{ opacity: 0, x: 16 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={viewport}
+        transition={{ delay: 0.5, ease: ease.outExpo }}
+      >
+        <span
+          className="font-mono text-2xs px-3 py-1.5 rounded-full flex items-center gap-1.5"
           style={{
-            background: 'rgba(45,212,191,0.1)',
-            border: '1px solid rgba(45,212,191,0.3)',
-            color: '#2dd4bf',
+            background: 'rgba(45,212,191,0.08)',
+            border:     '1px solid rgba(45,212,191,0.25)',
+            color:      '#2dd4bf',
           }}
         >
-          ★ Featured
-        </motion.span>
-      </div>
+          <span style={{ color: '#fbbf24' }}>★</span>
+          Featured
+        </span>
+      </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
+      <div className="grid grid-cols-1 lg:grid-cols-5">
 
         {/* Left — Content */}
-        <div className="p-10 flex flex-col gap-6 justify-center">
+        <div className="lg:col-span-3 p-10 flex flex-col gap-7 justify-center">
 
-          <div className="flex items-center gap-4">
+          {/* Icon + Title */}
+          <div className="flex items-start gap-5">
             <motion.div
               className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${project.color}
-                          flex items-center justify-center text-3xl shadow-lg`}
-              whileHover={{ scale: 1.1, rotate: -5 }}
-              transition={{ duration: 0.2 }}
+                          flex items-center justify-center text-3xl flex-shrink-0 shadow-depth`}
+              whileHover={{ scale: 1.1, rotate: -6 }}
+              transition={{ duration: 0.25 }}
             >
               {project.icon}
             </motion.div>
             <div>
-              <p className="font-mono text-xs uppercase tracking-widest mb-1"
-                style={{ color: '#2dd4bf' }}>
+              <p
+                className="font-mono text-2xs uppercase tracking-widest mb-1.5"
+                style={{ color: '#2dd4bf' }}
+              >
                 {project.subtitle}
               </p>
-              <h3 className="font-display text-3xl font-bold text-white tracking-tight">
+              <h3
+                className="font-display font-bold text-white tracking-tight"
+                style={{ fontSize: 'clamp(1.5rem, 2.5vw, 2rem)', lineHeight: '1.1' }}
+              >
                 {project.name}
               </h3>
             </div>
           </div>
 
-          <p className="text-lg font-light leading-relaxed" style={{ color: '#b8d4e3' }}>
+          {/* Description */}
+          <p
+            className="font-light leading-relaxed"
+            style={{ color: '#94a3b8', fontSize: '1rem', lineHeight: '1.8' }}
+          >
             {project.description}
           </p>
 
-          <motion.div
-            className="flex flex-wrap gap-2"
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewport}
-          >
+          {/* Tech tags */}
+          <div className="flex flex-wrap gap-2">
             {project.tech.map((t, i) => (
-              <motion.span
-                key={t}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={viewport}
-                transition={{ delay: 0.3 + i * 0.06 }}
-                whileHover={{ scale: 1.1, y: -2 }}
-                className="tag cursor-default"
-              >
-                {t}
-              </motion.span>
+              <TechTag key={t} tech={t} index={i} />
             ))}
-          </motion.div>
+          </div>
 
-          <div className="flex gap-3 pt-2">
+          {/* CTAs */}
+          <div className="flex gap-3 pt-1">
             <motion.a
               href={project.github}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-primary"
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.96 }}
+              whileHover={{ scale: 1.04, y: -2 }}
+              whileTap={{  scale: 0.97 }}
             >
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
               </svg>
               View Code
             </motion.a>
-
             <motion.a
               href={project.github}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-outline"
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.96 }}
+              whileHover={{ scale: 1.04, y: -2 }}
+              whileTap={{  scale: 0.97 }}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
@@ -136,38 +158,25 @@ function FeaturedProject({ project }) {
 
         {/* Right — Visual Panel */}
         <div
-          className="relative hidden lg:flex items-center justify-center p-10 overflow-hidden"
+          className="lg:col-span-2 relative hidden lg:flex items-center
+                     justify-center p-10 overflow-hidden"
           style={{
-            borderLeft: '1px solid rgba(30,58,82,0.6)',
-            background: 'rgba(7,17,31,0.4)',
+            borderLeft: '1px solid rgba(30,58,82,0.5)',
+            background: 'rgba(5,13,24,0.5)',
           }}
         >
-          {/* Glow orb */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: `radial-gradient(ellipse at center, ${
-                project.color.includes('mint') ? 'rgba(45,212,191,0.08)' :
-                project.color.includes('violet') ? 'rgba(139,92,246,0.08)' :
-                'rgba(251,146,60,0.08)'
-              }, transparent 70%)`,
-            }}
-          />
 
-          {/* Large project number */}
-          <motion.div
-            className="absolute"
-            initial={{ opacity: 0, scale: 0.5 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={viewport}
-            transition={{ delay: 0.5, duration: 0.6 }}
+          {/* Background number */}
+          <div
+            className="absolute inset-0 flex items-center justify-center
+                       select-none pointer-events-none"
           >
             <span
-              className="font-display font-black select-none"
+              className="font-display font-black"
               style={{
-                fontSize: '10rem',
+                fontSize: '11rem',
                 lineHeight: 1,
-                background: 'linear-gradient(135deg, rgba(45,212,191,0.08), transparent)',
+                background: 'linear-gradient(135deg, rgba(45,212,191,0.06), transparent)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
@@ -175,33 +184,42 @@ function FeaturedProject({ project }) {
             >
               01
             </span>
-          </motion.div>
+          </div>
 
-          {/* Floating tech stack */}
-          <div className="relative z-10 flex flex-col gap-3">
+          {/* Glow orb */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: 'radial-gradient(circle at center, rgba(45,212,191,0.06), transparent 65%)',
+            }}
+          />
+
+          {/* Floating stack items */}
+          <div className="relative z-10 flex flex-col gap-3 w-full max-w-[200px]">
             {project.tech.slice(0, 4).map((t, i) => (
               <motion.div
                 key={t}
-                initial={{ opacity: 0, x: 30 }}
+                initial={{ opacity: 0, x: 24 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={viewport}
-                transition={{ delay: 0.4 + i * 0.1 }}
+                transition={{ delay: 0.3 + i * 0.1, ease: ease.outExpo }}
                 animate={{ y: [0, -4, 0] }}
+                whileHover={{ x: 4 }}
+                className="flex items-center gap-3 px-4 py-3 rounded-xl cursor-default"
                 style={{
-                  animationDuration: `${3 + i * 0.5}s`,
-                }}
-                className="flex items-center gap-3 px-4 py-3 rounded-xl"
-                style={{
-                  background: 'rgba(15,32,53,0.8)',
-                  border: '1px solid rgba(45,212,191,0.1)',
-                  backdropFilter: 'blur(12px)',
+                  background:     'rgba(15,32,53,0.85)',
+                  border:         '1px solid rgba(45,212,191,0.1)',
+                  backdropFilter: 'blur(16px)',
+                  animationDuration: `${3.5 + i * 0.6}s`,
+                  animationTimingFunction: 'ease-in-out',
+                  animationIterationCount: 'infinite',
                 }}
               >
                 <div
-                  className="w-2 h-2 rounded-full"
+                  className="w-1.5 h-1.5 rounded-full flex-shrink-0"
                   style={{ background: '#2dd4bf' }}
                 />
-                <span className="font-mono text-sm text-white">{t}</span>
+                <span className="font-mono text-xs text-white">{t}</span>
               </motion.div>
             ))}
           </div>
@@ -216,52 +234,52 @@ function FeaturedProject({ project }) {
 function ProjectCard({ project, index }) {
   return (
     <motion.div
-      variants={scaleIn}
-      whileHover={{
-        y: -6,
-        borderColor: 'rgba(45,212,191,0.25)',
-        boxShadow: '0 24px 60px rgba(0,0,0,0.4), 0 0 40px rgba(45,212,191,0.06)',
-        transition: { duration: 0.25 },
-      }}
-      className="relative rounded-2xl overflow-hidden cursor-default group"
+      variants={cardReveal}
+      className="relative rounded-2xl overflow-hidden group cursor-default"
       style={{
-        background: 'rgba(15,32,53,0.6)',
-        border: '1px solid rgba(30,58,82,0.8)',
+        background:     'rgba(12,26,46,0.6)',
+        border:         '1px solid rgba(30,58,82,0.7)',
         backdropFilter: 'blur(16px)',
       }}
+      whileHover={{
+        y:           -5,
+        borderColor: 'rgba(45,212,191,0.2)',
+        boxShadow:   '0 24px 64px rgba(0,0,0,0.45), 0 0 30px rgba(45,212,191,0.05)',
+        transition:  { duration: 0.25 },
+      }}
     >
-      {/* Top glow line on hover */}
+
+      {/* Hover top glow */}
       <motion.div
         className="absolute top-0 left-0 right-0 h-px pointer-events-none"
         style={{
           background: 'linear-gradient(90deg, transparent, rgba(45,212,191,0.4), transparent)',
           opacity: 0,
         }}
-        whileHover={{ opacity: 1 }}
+        whileHover={{ opacity: 1, transition: { duration: 0.3 } }}
       />
 
-      <div className="p-8 grid grid-cols-1 lg:grid-cols-5 gap-6 items-center">
+      <div className="p-7 grid grid-cols-1 lg:grid-cols-5 gap-6 items-center">
 
         {/* Left — Number + Icon */}
         <div className="lg:col-span-1 flex lg:flex-col items-center lg:items-start gap-4">
           <span
-            className="font-mono font-bold select-none"
+            className="font-display font-black select-none leading-none"
             style={{
               fontSize: '3.5rem',
-              lineHeight: 1,
-              background: 'linear-gradient(135deg, rgba(30,58,82,0.8), rgba(30,58,82,0.3))',
+              background: 'linear-gradient(135deg, rgba(30,58,82,0.9), rgba(30,58,82,0.3))',
               WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
+              WebkitTextFillColor:  'transparent',
+              backgroundClip:       'text',
               transition: 'all 0.3s',
             }}
           >
             0{index + 1}
           </span>
           <motion.div
-            className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${project.color}
-                        flex items-center justify-center text-2xl shadow-lg`}
-            whileHover={{ scale: 1.1, rotate: -5 }}
+            className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${project.color}
+                        flex items-center justify-center text-xl shadow-depth-sm`}
+            whileHover={{ scale: 1.12, rotate: -6 }}
             transition={{ duration: 0.2 }}
           >
             {project.icon}
@@ -271,36 +289,33 @@ function ProjectCard({ project, index }) {
         {/* Middle — Content */}
         <div className="lg:col-span-3 flex flex-col gap-4">
           <div>
-            <p className="font-mono text-xs uppercase tracking-widest mb-1"
-              style={{ color: '#2dd4bf' }}>
+            <p
+              className="font-mono text-2xs uppercase tracking-widest mb-1.5"
+              style={{ color: '#2dd4bf' }}
+            >
               {project.subtitle}
             </p>
-            <h3 className="font-display text-2xl font-bold text-white tracking-tight">
+            <h3
+              className="font-display text-xl font-bold text-white tracking-tight"
+            >
               {project.name}
             </h3>
           </div>
-          <p className="font-light leading-relaxed" style={{ color: '#7fb3cc' }}>
+          <p
+            className="font-light leading-relaxed text-sm"
+            style={{ color: '#64748b' }}
+          >
             {project.description}
           </p>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1.5">
             {project.tech.map((t, i) => (
-              <motion.span
-                key={t}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={viewport}
-                transition={{ delay: 0.1 + i * 0.05 }}
-                whileHover={{ scale: 1.1, y: -1 }}
-                className="tag cursor-default"
-              >
-                {t}
-              </motion.span>
+              <TechTag key={t} tech={t} index={i} />
             ))}
           </div>
         </div>
 
         {/* Right — Links */}
-        <div className="lg:col-span-1 flex lg:flex-col gap-3 justify-start lg:items-end">
+        <div className="lg:col-span-1 flex lg:flex-col gap-2.5 justify-start lg:items-end">
           <motion.a
             href={project.github}
             target="_blank"
@@ -309,21 +324,22 @@ function ProjectCard({ project, index }) {
                        px-4 py-2.5 rounded-xl border transition-all duration-200"
             style={{
               borderColor: 'rgba(30,58,82,0.8)',
-              color: '#7fb3cc',
-              background: 'rgba(15,32,53,0.4)',
+              color:       '#64748b',
+              background:  'rgba(15,32,53,0.4)',
             }}
             whileHover={{
-              scale: 1.05,
-              y: -2,
-              borderColor: 'rgba(45,212,191,0.4)',
-              color: '#2dd4bf',
+              scale:       1.04,
+              y:           -2,
+              borderColor: 'rgba(45,212,191,0.35)',
+              color:       '#2dd4bf',
+              background:  'rgba(45,212,191,0.04)',
             }}
-            whileTap={{ scale: 0.96 }}
+            whileTap={{ scale: 0.97 }}
           >
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+            <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
             </svg>
-            View Code
+            Code
           </motion.a>
 
           <motion.a
@@ -331,15 +347,15 @@ function ProjectCard({ project, index }) {
             target="_blank"
             rel="noopener noreferrer"
             className="btn-primary"
-            style={{ fontSize: '0.75rem', padding: '10px 16px' }}
-            whileHover={{ scale: 1.05, y: -2 }}
-            whileTap={{ scale: 0.96 }}
+            style={{ fontSize: '0.72rem', padding: '10px 14px' }}
+            whileHover={{ scale: 1.04, y: -2 }}
+            whileTap={{  scale: 0.97 }}
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                 d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
             </svg>
-            Live Demo
+            Demo
           </motion.a>
         </div>
 
@@ -353,23 +369,33 @@ export default function Projects() {
   const rest     = projects.slice(1)
 
   return (
-    <section id="projects" className="section-padding relative overflow-hidden">
+    <section
+      id="projects"
+      className="section-padding relative overflow-hidden"
+      style={{ background: 'rgba(5,13,24,0.6)' }}
+    >
 
-      {/* Ambient orbs */}
+      {/* Atmosphere */}
       <div
-        className="absolute top-1/2 right-0 w-[500px] h-[500px] pointer-events-none"
+        className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(circle, rgba(45,212,191,0.05), transparent 70%)',
-          filter: 'blur(80px)',
-          transform: 'translate(40%, -50%)',
+          background: 'radial-gradient(ellipse 70% 50% at 100% 40%, rgba(45,212,191,0.04), transparent)',
+        }}
+      />
+      <div
+        className="absolute top-1/3 right-0 w-[500px] h-[500px] pointer-events-none"
+        style={{
+          background: 'radial-gradient(circle, rgba(45,212,191,0.04), transparent 70%)',
+          filter:     'blur(80px)',
+          transform:  'translate(40%, -30%)',
         }}
       />
       <div
         className="absolute bottom-0 left-0 w-[400px] h-[400px] pointer-events-none"
         style={{
-          background: 'radial-gradient(circle, rgba(139,92,246,0.04), transparent 70%)',
-          filter: 'blur(60px)',
-          transform: 'translate(-30%, 30%)',
+          background: 'radial-gradient(circle, rgba(124,58,237,0.03), transparent 70%)',
+          filter:     'blur(80px)',
+          transform:  'translate(-30%, 30%)',
         }}
       />
 
@@ -386,22 +412,25 @@ export default function Projects() {
           <motion.p variants={fadeUp} className="section-label">
             03 — projects
           </motion.p>
-          <motion.h2 variants={fadeUp} className="section-title">
+          <motion.h2
+            variants={blurIn}
+            className="font-display font-bold tracking-tight text-white mb-4"
+            style={{ fontSize: 'clamp(2rem, 4vw, 3.25rem)', lineHeight: '1.1' }}
+          >
             Things I've Built
           </motion.h2>
           <motion.p variants={fadeUp} className="section-sub">
-            A selection of real Android projects — each built with
-            clean architecture, modern Jetpack libraries, and
-            attention to detail.
+            Real Android projects — each built with clean architecture,
+            modern Jetpack libraries, and attention to detail.
           </motion.p>
         </motion.div>
 
-        {/* Featured Project */}
+        {/* Featured */}
         <FeaturedProject project={featured} />
 
-        {/* Rest of projects */}
+        {/* Rest */}
         <motion.div
-          className="flex flex-col gap-6"
+          className="flex flex-col gap-4"
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
@@ -416,24 +445,31 @@ export default function Projects() {
           ))}
         </motion.div>
 
-        {/* Bottom CTA */}
+        {/* CTA */}
         <motion.div
           variants={fadeUp}
           initial="hidden"
           whileInView="visible"
           viewport={viewport}
-          className="mt-14 text-center"
+          className="mt-14 flex flex-col items-center gap-4"
         >
-          <p className="font-light mb-5" style={{ color: '#4a7a9b' }}>
-            Want to see more? All my work is on GitHub.
+          <div
+            className="w-px h-12"
+            style={{ background: 'linear-gradient(to bottom, rgba(45,212,191,0.3), transparent)' }}
+          />
+          <p
+            className="font-mono text-xs uppercase tracking-widest"
+            style={{ color: '#334155' }}
+          >
+            more on github
           </p>
           <motion.a
             href="https://github.com/kartikkh1607"
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-outline inline-flex"
-            whileHover={{ scale: 1.05, y: -2 }}
-            whileTap={{ scale: 0.96 }}
+            className="btn-outline"
+            whileHover={{ scale: 1.04, y: -2 }}
+            whileTap={{  scale: 0.97 }}
           >
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
