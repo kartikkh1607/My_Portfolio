@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: #07111f;
+    color: #e2e8f0;
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: rgba(45,212,191,0.3);
+    color: #5eead4;
+  }
+
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background-color: #050d18; }
+  ::-webkit-scrollbar-thumb { background-color: #0d9488; border-radius: 9999px; }
+}
+
+@layer components {
+  .section-padding {
+    @apply px-6 py-24 md:px-16 lg:px-28;
+  }
+
+  .section-label {
+    @apply font-mono text-xs tracking-widest uppercase mb-3;
+    color: #2dd4bf;
+  }
+
+  .section-title {
+    @apply font-display text-4xl md:text-5xl font-bold tracking-tight text-white mb-4;
+  }
+
+  .section-sub {
+    @apply text-lg font-light max-w-xl leading-relaxed;
+    color: #b8d4e3;
+  }
+
+  .card {
+    @apply rounded-2xl p-6 border transition-all duration-300;
+    background-color: #0f2035;
+    border-color: #1e3a52;
+  }
+
+  .card:hover {
+    border-color: rgba(45,212,191,0.3);
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center gap-2 font-sans font-semibold px-6 py-3 rounded-xl transition-all duration-200 hover:-translate-y-0.5;
+    background-color: #2dd4bf;
+    color: #050d18;
+  }
+
+  .btn-primary:hover {
+    background-color: #5eead4;
+    box-shadow: 0 10px 25px rgba(45,212,191,0.2);
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center gap-2 font-sans font-medium px-6 py-3 rounded-xl border transition-all duration-200 hover:-translate-y-0.5;
+    border-color: #1e3a52;
+    color: #b8d4e3;
+  }
+
+  .btn-outline:hover {
+    border-color: rgba(45,212,191,0.5);
+    color: #2dd4bf;
+  }
+
+  .tag {
+    @apply inline-block text-xs font-mono px-3 py-1 rounded-full border;
+    background-color: #0c1a2e;
+    border-color: #1e3a52;
+    color: #7fb3cc;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-mint-400 to-mint-300 bg-clip-text text-transparent;
+  }
+
+  .bg-grid {
+    background-image:
+      linear-gradient(rgba(45,212,191,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(45,212,191,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+}
