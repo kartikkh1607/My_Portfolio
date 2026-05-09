@@ -3,10 +3,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { personalInfo } from "../data/portfolio.js";
 
 const links = [
-  { label: "About", href: "#about" },
-  { label: "Skills", href: "#skills" },
+  { label: "About",    href: "#about"    },
+  { label: "Journey",  href: "#timeline" },
+  { label: "Skills",   href: "#skills"   },
   { label: "Projects", href: "#projects" },
-  { label: "Contact", href: "#contact" },
+  { label: "Contact",  href: "#contact"  },
 ];
 
 export default function Navbar() {
@@ -18,7 +19,7 @@ export default function Navbar() {
     const onScroll = () => {
       setScrolled(window.scrollY > 30);
 
-      const sections = ["about", "skills", "projects", "contact"];
+      const sections = ["about", "timeline", "skills", "projects", "contact"];
 
       for (const id of [...sections].reverse()) {
         const el = document.getElementById(id);

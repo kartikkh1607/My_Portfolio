@@ -3,7 +3,7 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Points, PointMaterial } from '@react-three/drei'
 import * as THREE from 'three'
 
-function Particles({ count = 2200 }) {
+function Particles({ count }) {
   const ref        = useRef()
   const clockRef   = useRef(0)
   const mouseRef   = useRef({ x: 0, y: 0 })
@@ -167,6 +167,9 @@ function GlowSphere() {
 }
 
 export default function ParticlesCanvas() {
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+  const particleCount = isMobile ? 600 : 2200
+
   return (
     <div className="absolute inset-0 w-full h-full pointer-events-none">
       <Canvas
@@ -180,7 +183,7 @@ export default function ParticlesCanvas() {
         dpr={[1, 1.5]}
         performance={{ min: 0.5 }}
       >
-        <Particles />
+        <Particles count={particleCount} />
         <ConnectionLines />
         <GlowSphere />
       </Canvas>

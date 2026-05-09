@@ -175,7 +175,7 @@ export default function Contact() {
           viewport={viewport}
         >
           <motion.p variants={fadeUp} className="section-label">
-            04 — contact
+            05 — contact
           </motion.p>
           <motion.h2
             variants={blurIn}

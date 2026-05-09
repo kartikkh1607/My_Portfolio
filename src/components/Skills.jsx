@@ -176,7 +176,7 @@ export default function Skills() {
           viewport={viewport}
         >
           <motion.p variants={fadeUp} className="section-label">
-            02 — skills
+            03 — skills
           </motion.p>
           <motion.h2 variants={fadeUp} className="section-title">
             What I Work With
