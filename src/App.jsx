@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import Navbar        from './components/Navbar.jsx'
-import Hero          from './components/Hero.jsx'
-import About         from './components/About.jsx'
-import Timeline      from './components/Timeline.jsx'
-import Skills        from './components/Skills.jsx'
-import Projects      from './components/Projects.jsx'
-import Contact       from './components/Contact.jsx'
-import Footer        from './components/Footer.jsx'
-import ScrollProgress from './components/ScrollProgress.jsx'
+import Navbar          from './components/Navbar.jsx'
+import Hero            from './components/Hero.jsx'
+import About           from './components/About.jsx'
+import Timeline        from './components/Timeline.jsx'
+import Skills          from './components/Skills.jsx'
+import Projects        from './components/Projects.jsx'
+import Contact         from './components/Contact.jsx'
+import Footer          from './components/Footer.jsx'
+import ScrollProgress  from './components/ScrollProgress.jsx'
+import ParticlesCanvas from './three/ParticlesCanvas.jsx'
 
 
 // ── Back-to-Top Button ────────────────────────────────────────────
@@ -73,16 +74,23 @@ export default function App() {
   return (
     <main className="relative overflow-x-hidden">
 
-      <ScrollProgress />
-      <Navbar />
-      <Hero />
-      <About />
-      <Timeline />
-      <Skills />
-      <Projects />
-      <Contact />
-      <Footer />
-      <BackToTop />
+      {/* ── Global particle background — fixed so it spans every section ── */}
+      <div className="fixed inset-0 w-full h-full pointer-events-none" style={{ zIndex: 0 }}>
+        <ParticlesCanvas />
+      </div>
+
+      <div className="relative" style={{ zIndex: 1 }}>
+        <ScrollProgress />
+        <Navbar />
+        <Hero />
+        <About />
+        <Timeline />
+        <Skills />
+        <Projects />
+        <Contact />
+        <Footer />
+        <BackToTop />
+      </div>
     </main>
   )
 }
