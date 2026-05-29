@@ -77,4 +77,4 @@ automatic deployment.
 
 - **Email:** kartikkhandelwal1234589@gmail.com
 - **GitHub:** [@kartikkh1607](https://github.com/kartikkh1607)
-- **LinkedIn:** [Kartik Khandelwal](https://www.linkedin.com/in/kartik-khandelwal-2b556a280/)
+- **LinkedIn:** [Kartik Khandelwal](https://www.linkedin.com/in/kartik-khandelwal-a71554327/)
