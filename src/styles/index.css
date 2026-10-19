@@ -1,10 +1,100 @@
 @import "tailwindcss";
 
-/* Phase 1: plain content only. Tokens, fonts and theming arrive in Phase 2. */
+/* ── Tokens (CLAUDE.md §3) ─────────────────────────────────────────
+   Light is default. Dark follows prefers-color-scheme unless the
+   manual toggle has set data-theme on <html>.
+   Amber is reserved for measured results. In light mode it only
+   reaches 3:1, so amber text must be large (≥ 28px bold) and sit
+   on --surface. */
+:root {
+  --bg: #EEF1F6;
+  --surface: #FFFFFF;
+  --ink: #1B2433;
+  --muted: #5E6779;
+  --cobalt: #2B4ACB;
+  --cobalt-hover: #22399F;
+  --on-cobalt: #FFFFFF;
+  --amber: #C9831F;
+  --teal: #1F8A84;
+  --plum: #8A3E7A;
+  --line: #D5DAE3;
+  --line-strong: #8890A0;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11151D;
+    --surface: #1A2030;
+    --ink: #E6E9F0;
+    --muted: #9AA3B5;
+    --cobalt: #7D93F2;
+    --cobalt-hover: #9AACF5;
+    --on-cobalt: #11151D;
+    --amber: #E8A33D;
+    --teal: #4FC1B9;
+    --plum: #C77AB8;
+    --line: #2B3346;
+    --line-strong: #6B7590;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #11151D;
+  --surface: #1A2030;
+  --ink: #E6E9F0;
+  --muted: #9AA3B5;
+  --cobalt: #7D93F2;
+  --cobalt-hover: #9AACF5;
+  --on-cobalt: #11151D;
+  --amber: #E8A33D;
+  --teal: #4FC1B9;
+  --plum: #C77AB8;
+  --line: #2B3346;
+  --line-strong: #6B7590;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-cobalt: var(--cobalt);
+  --color-amber: var(--amber);
+  --color-teal: var(--teal);
+  --color-plum: var(--plum);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+}
+
+/* Modular scale, ratio 1.333: 16 / 21 / 28 / 38 / 50 / 67 px */
+@theme {
+  --container-page: 70rem; /* 1120px */
+
+  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --text-step-0: 1rem;
+  --text-step-0--line-height: 1.5;
+  --text-step-1: 1.3125rem;
+  --text-step-1--line-height: 1.4;
+  --text-step-2: 1.75rem;
+  --text-step-2--line-height: 1.2;
+  --text-step-3: 2.375rem;
+  --text-step-3--line-height: 1.1;
+  --text-step-4: 3.125rem;
+  --text-step-4--line-height: 1.05;
+  --text-step-5: 4.1875rem;
+  --text-step-5--line-height: 1;
+}
 
 @layer base {
   html {
+    background: var(--bg);
     -webkit-font-smoothing: antialiased;
+    text-size-adjust: 100%;
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -14,21 +104,102 @@
   }
 
   body {
-    background: #ffffff;
-    color: #1b2433;
-    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
-    font-size: 17px;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
     line-height: 1.6;
   }
 
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
   a {
-    color: #2b4acb;
-    text-decoration: underline;
-    text-underline-offset: 2px;
+    color: var(--cobalt);
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  a:hover {
+    text-decoration-thickness: 2px;
   }
 
   :focus-visible {
-    outline: 2px solid #2b4acb;
+    outline: 2px solid var(--cobalt);
     outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--cobalt) 28%, transparent);
+  }
+}
+
+/* Radius encodes component type: panels 14px, chips 999px, buttons 6px. */
+@layer components {
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    padding: 0.5rem 1rem;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .btn-primary {
+    background: var(--cobalt);
+    color: var(--on-cobalt);
+  }
+
+  .btn-primary:hover {
+    background: var(--cobalt-hover);
+  }
+
+  .btn-secondary {
+    border-color: var(--line-strong);
+    color: var(--ink);
+    background: transparent;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--ink);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.125rem 0.625rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+
+  /* Numbers in metric panels */
+  .num {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+
+  .measure {
+    max-width: 70ch;
   }
 }

@@ -35,7 +35,11 @@ export const flagship = {
   finding:
     'The English-only embedder matched Hinglish queries by language, not topic. Query rewriting fixed it.',
   headline: { label: 'hit@5', before: '65%', after: '95%' },
-  evalCaption: '20 retrieval questions plus 8 off-topic questions, k = 5.',
+  secondary: [
+    { label: 'MRR', before: '~0.59', after: '0.77' },
+    { label: 'Off-topic refused', after: '100%' },
+  ],
+  evalCaption: 'Golden set: 20 retrieval questions plus 8 off-topic questions, k = 5.',
   evalColumns: ['Setup', 'hit@5', 'top-1', 'MRR', 'Refusal'],
   evalRows: [
     ['Baseline (no rewrite)', '65%', '~55%', '~0.59', '100%'],
@@ -65,9 +69,10 @@ export const projects = [
         'Prompt-injection and XSS defenses',
         'Per-IP and global rate limits',
         'Only valid requests count against limits',
-        '31 pytest tests with the LLM mocked, ~2 s',
       ],
-      note: 'Known limitation: per-IP limits can be spoofed via X-Forwarded-For; the global cap bounds the damage.',
+      metric: { value: '31', label: 'pytest tests with the LLM mocked, ~2 s' },
+      // Documented known limitation, not a fix. Keep the wording.
+      note: 'Per-IP limits can be spoofed via X-Forwarded-For; the global cap bounds the damage.',
     },
     caseStudy: {
       title: 'Debugging story: truncated structured outputs',
@@ -98,8 +103,8 @@ export const projects = [
     evidence: {
       type: 'flow',
       title: 'How an AI request travels',
-      steps: ['App', 'Firebase ID token', 'Cloudflare Worker', 'Gemini'],
-      fallback: 'Groq',
+      description:
+        'The app sends a Firebase ID token to a Cloudflare Worker, which calls Gemini and falls back to Groq. No API keys ship in the APK.',
     },
   },
   {
@@ -117,8 +122,13 @@ export const projects = [
     ],
     evidence: {
       type: 'sequence',
-      title: 'Review schedule (days)',
-      steps: [3, 7, 30, 90],
+      title: 'Review schedule',
+      steps: [
+        { days: 3, label: 'Re-check after a failed review' },
+        { days: 7, label: 'First review' },
+        { days: 30, label: 'Second review' },
+        { days: 90, label: 'Third review' },
+      ],
     },
   },
 ]
@@ -168,8 +178,8 @@ export const skills = [
 ]
 
 export const achievements = [
-  '450+ LeetCode problems, 100+ day streak',
-  'National-level participant, Bharatiya Antariksh Hackathon 2025 (ISRO & Hack2Skill)',
+  { value: '450+', label: 'LeetCode problems, 100+ day streak' },
+  { label: 'National-level participant, Bharatiya Antariksh Hackathon 2025 (ISRO & Hack2Skill)' },
 ]
 
 export const certifications = [
@@ -177,4 +187,13 @@ export const certifications = [
   { name: 'AWS Certified Data Engineer – Associate', date: 'Apr 2026' },
   { name: 'AWS Certified AI Practitioner', date: 'Dec 2025' },
   { name: 'AWS Certified Cloud Practitioner', date: 'Dec 2025' },
+]
+
+// Query chips under the hero map. Queries match CLAUDE.md Section 6.
+export const mapChips = [
+  { label: 'RAG', query: 'retrieval and RAG' },
+  { label: 'evals', query: 'evaluation and metrics' },
+  { label: 'Android', query: 'Android apps' },
+  { label: 'infra', query: 'cloud and infrastructure' },
+  { label: 'testing', query: 'testing' },
 ]

@@ -11,7 +11,7 @@ export default function App() {
   return (
     <>
       <Navbar />
-      <main className="mx-auto max-w-[1120px] px-4 sm:px-6">
+      <main className="mx-auto max-w-page px-4 sm:px-6">
         <Hero />
         <Projects />
         <Skills />

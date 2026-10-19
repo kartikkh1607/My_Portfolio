@@ -1,17 +1,30 @@
+import { Download } from 'lucide-react'
 import { personalInfo } from '../data/portfolio.js'
+import MapPlaceholder from './MapPlaceholder.jsx'
 
 export default function Hero() {
   return (
-    <section id="top" aria-labelledby="hero-title" className="py-12">
-      <h1 id="hero-title" className="max-w-[20ch] text-4xl font-bold leading-tight">
-        {personalInfo.heroLine}
-      </h1>
-      <p className="mt-4 max-w-[70ch]">{personalInfo.subLine}</p>
-      <p className="mt-6 flex flex-wrap gap-4">
-        <a href={personalInfo.resume} download>Download resume</a>
-        <a href={personalInfo.github} target="_blank" rel="noopener noreferrer">GitHub</a>
-        <a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
-      </p>
+    <section
+      id="top"
+      aria-labelledby="hero-title"
+      className="grid items-center gap-10 pb-16 pt-8 lg:grid-cols-[1fr_1.1fr] lg:gap-12 lg:pb-24 lg:pt-16"
+    >
+      <div>
+        <h1 id="hero-title" className="max-w-[16ch] text-step-3 sm:text-step-4">
+          {personalInfo.heroLine}
+        </h1>
+        <p className="measure mt-5 text-step-1 text-muted">{personalInfo.subLine}</p>
+        <div className="mt-8 flex flex-wrap gap-3">
+          <a href={personalInfo.resume} download className="btn btn-primary">
+            <Download size={18} aria-hidden="true" />
+            Download resume
+          </a>
+          <a href={personalInfo.github} target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
+            GitHub
+          </a>
+        </div>
+      </div>
+      <MapPlaceholder />
     </section>
   )
 }
