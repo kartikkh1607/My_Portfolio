@@ -9,7 +9,7 @@ import App from './App.jsx'
 import { scene } from './motion/bridge.js'
 import { reducedMotion, startSmoothScroll } from './motion/smoothScroll.js'
 import { startLayoutWatch } from './motion/layout.js'
-import { startTicker } from './motion/ticker.js'
+import { setContinuous, startTicker } from './motion/ticker.js'
 import './styles/index.css'
 
 scene.reduced = reducedMotion()
@@ -19,6 +19,9 @@ scene.compact = window.matchMedia('(pointer: coarse), (max-width: 767px)').match
 startTicker()
 startLayoutWatch()
 startSmoothScroll()
+// With motion allowed the loop runs every frame (3D drift, Lenis);
+// with reduced motion it only runs on demand.
+setContinuous(!scene.reduced)
 
 const root = document.getElementById('root')
 const app = (
