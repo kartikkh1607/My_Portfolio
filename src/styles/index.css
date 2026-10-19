@@ -239,6 +239,12 @@
     letter-spacing: -0.02em;
   }
 
+  /* Controls that need JavaScript stay hidden in the no-JS / prerendered view.
+     index.html adds .js to <html> before first paint. */
+  html:not(.js) .js-only {
+    display: none !important;
+  }
+
   .measure {
     max-width: 70ch;
   }

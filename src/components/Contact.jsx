@@ -59,7 +59,7 @@ function ContactForm() {
     'mt-1 block w-full rounded-md border border-line-strong bg-surface px-3 py-2.5 text-ink focus-visible:border-cobalt'
 
   return (
-    <form onSubmit={handleSubmit} className="panel grid gap-5 p-5 sm:p-7" aria-label="Send a message">
+    <form onSubmit={handleSubmit} className="js-only panel grid gap-5 p-5 sm:p-7" aria-label="Send a message">
       <div className="grid gap-5 sm:grid-cols-2">
         <label className="font-medium">
           Name
@@ -95,7 +95,7 @@ export default function Contact() {
         <p className="mt-4 sm:text-step-1">
           <a href={`mailto:${personalInfo.email}`} className="wrap-anywhere">{personalInfo.email}</a>
         </p>
-        <div className="mt-4"><CopyEmail /></div>
+        <div className="js-only mt-4"><CopyEmail /></div>
         <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2">
           <li><a href={personalInfo.linkedin} {...external}>LinkedIn</a></li>
           <li><a href={personalInfo.github} {...external}>GitHub</a></li>

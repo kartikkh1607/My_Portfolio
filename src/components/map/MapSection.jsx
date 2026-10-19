@@ -155,7 +155,7 @@ export default function MapSection() {
         {focused != null && `${points[focused].text} (${order.indexOf(focused) + 1} of ${order.length})`}
       </p>
 
-      <div role="group" aria-label="Ask the map" className="flex flex-wrap items-center gap-2">
+      <div role="group" aria-label="Ask the map" className="js-only flex flex-wrap items-center gap-2">
         <span className="text-sm text-muted" aria-hidden="true">Ask the map:</span>
         {chips.map((c) => (
           <button
@@ -176,7 +176,7 @@ export default function MapSection() {
         )}
       </div>
 
-      <div aria-live="polite" className="lg:min-h-[6.5rem]">
+      <div aria-live="polite" className="js-only lg:min-h-[6.5rem]">
         {!chip && (
           <p className="text-sm text-muted">Pick a topic to light up the 8 sentences nearest to it, ranked by cosine similarity.</p>
         )}

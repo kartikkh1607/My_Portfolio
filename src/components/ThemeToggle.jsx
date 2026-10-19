@@ -37,9 +37,10 @@ export default function ThemeToggle() {
       type="button"
       onClick={toggle}
       aria-label={theme ? `Switch to ${next} theme` : 'Toggle color theme'}
-      className="inline-flex h-11 w-11 items-center justify-center rounded-md text-muted hover:text-ink"
+      className="js-only inline-flex h-11 w-11 items-center justify-center rounded-md text-muted hover:text-ink"
     >
-      {theme === 'dark' ? <Sun size={20} aria-hidden="true" /> : <Moon size={20} aria-hidden="true" />}
+      {/* Icon only after mount: the prerendered HTML can't know the visitor's theme. */}
+      {theme && (theme === 'dark' ? <Sun size={20} aria-hidden="true" /> : <Moon size={20} aria-hidden="true" />)}
     </button>
   )
 }
