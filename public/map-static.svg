@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-0.770 -0.838 1.890 1.875" width="600" height="595" role="img" aria-label="Embedding map: each dot is a sentence about my work, embedded with all-MiniLM-L6-v2 and projected with PCA.">
+  <style>circle{fill-opacity:.85}.c-rag{fill:#2B4ACB}.c-evals{fill:#6B4FD0}.c-llm-apps{fill:#2F7FBF}.c-android{fill:#8A3E7A}.c-infra{fill:#1F8A84}.c-testing{fill:#5E6779}.c-dsa{fill:#1B2433}@media (prefers-color-scheme: dark){.c-rag{fill:#7D93F2}.c-evals{fill:#A28BF2}.c-llm-apps{fill:#6FB3E8}.c-android{fill:#C77AB8}.c-infra{fill:#4FC1B9}.c-testing{fill:#9AA3B5}.c-dsa{fill:#E6E9F0}}</style>
+  <circle class="c-rag" cx="-0.376" cy="-0.321" r="0.032"><title>YT Lecture RAG searches 126 YouTube DSA lectures and jumps to the second where a topic is explained.</title></circle>
+  <circle class="c-rag" cx="-0.383" cy="-0.436" r="0.032"><title>Lecture transcripts are chunked into 75-second windows with 15 seconds of overlap.</title></circle>
+  <circle class="c-rag" cx="-0.503" cy="-0.354" r="0.032"><title>The lecture index holds 2,933 transcript chunks from about 68 hours of video.</title></circle>
+  <circle class="c-rag" cx="-0.237" cy="-0.212" r="0.032"><title>Transcript chunks are embedded with all-MiniLM-L6-v2 and stored in a local Qdrant collection.</title></circle>
+  <circle class="c-rag" cx="-0.435" cy="-0.437" r="0.032"><title>A distance cutoff drops retrieved chunks that are too far from the query.</title></circle>
+  <circle class="c-rag" cx="-0.556" cy="-0.468" r="0.032"><title>A title-word boost ranks a lecture higher when the query matches its title.</title></circle>
+  <circle class="c-rag" cx="-0.464" cy="-0.388" r="0.032"><title>A small Groq model rewrites Hinglish questions into English DSA search queries.</title></circle>
+  <circle class="c-rag" cx="-0.501" cy="-0.435" r="0.032"><title>Rewritten search queries are cached so a repeated question skips the LLM call.</title></circle>
+  <circle class="c-rag" cx="-0.412" cy="-0.195" r="0.032"><title>Ask a DSA question in Hinglish or English and land on the exact lecture timestamp.</title></circle>
+  <circle class="c-rag" cx="-0.472" cy="-0.424" r="0.032"><title>The English-only embedder matched Hinglish queries by language instead of by topic.</title></circle>
+  <circle class="c-rag" cx="-0.65" cy="-0.498" r="0.032"><title>Query rewriting fixed the mismatch between Hinglish questions and English transcripts.</title></circle>
+  <circle class="c-rag" cx="-0.269" cy="-0.206" r="0.032"><title>Embeddings run through fastembed with ONNX so lecture search fits on Vercel.</title></circle>
+  <circle class="c-rag" cx="-0.5" cy="-0.337" r="0.032"><title>Vector search over transcript chunks returns the top five candidate moments.</title></circle>
+  <circle class="c-rag" cx="-0.34" cy="-0.332" r="0.032"><title>Grounded answers are generated only from retrieved lecture excerpts.</title></circle>
+  <circle class="c-rag" cx="-0.427" cy="-0.329" r="0.032"><title>Each grounded answer has to cite the lecture excerpt it draws from.</title></circle>
+  <circle class="c-evals" cx="-0.39" cy="-0.267" r="0.032"><title>The retrieval eval uses a golden set of 20 questions plus 8 off-topic questions.</title></circle>
+  <circle class="c-evals" cx="-0.545" cy="-0.312" r="0.032"><title>Query rewriting raised hit@5 from 65% to 95%.</title></circle>
+  <circle class="c-evals" cx="-0.611" cy="-0.25" r="0.032"><title>Mean reciprocal rank rose from about 0.59 to 0.77 after query rewriting.</title></circle>
+  <circle class="c-evals" cx="-0.567" cy="-0.251" r="0.032"><title>Top-1 accuracy went from about 55% to 65% with query rewriting.</title></circle>
+  <circle class="c-evals" cx="-0.253" cy="-0.25" r="0.032"><title>All 8 off-topic questions in the golden set are refused.</title></circle>
+  <circle class="c-evals" cx="-0.17" cy="-0.193" r="0.032"><title>Moving to fastembed ONNX left hit@5, top-1 and MRR unchanged.</title></circle>
+  <circle class="c-evals" cx="-0.455" cy="-0.302" r="0.032"><title>Retrieval quality is measured with hit@k and MRR at k = 5.</title></circle>
+  <circle class="c-evals" cx="-0.37" cy="-0.186" r="0.032"><title>The answer is refused when nothing survives the distance cutoff.</title></circle>
+  <circle class="c-evals" cx="-0.409" cy="-0.324" r="0.032"><title>The answer is refused when the model says the excerpts don&#x27;t cover the question.</title></circle>
+  <circle class="c-evals" cx="-0.398" cy="0.055" r="0.032"><title>The answer is refused when it has no valid citation.</title></circle>
+  <circle class="c-evals" cx="-0.109" cy="-0.224" r="0.032"><title>Every setup is scored against the baseline on the same golden set.</title></circle>
+  <circle class="c-evals" cx="-0.319" cy="0.179" r="0.032"><title>HireMeAI says it is not in the resume instead of inventing an answer.</title></circle>
+  <circle class="c-llm-apps" cx="-0.118" cy="0.505" r="0.032"><title>HireMeAI is a recruiter chatbot that answers only from my resume.</title></circle>
+  <circle class="c-llm-apps" cx="-0.195" cy="0.131" r="0.032"><title>The resume is parsed once into a strict JSON schema.</title></circle>
+  <circle class="c-llm-apps" cx="-0.187" cy="0.071" r="0.032"><title>The parsed resume is committed as a cache keyed on file, prompt and model.</title></circle>
+  <circle class="c-llm-apps" cx="-0.222" cy="0.003" r="0.032"><title>Production startup makes zero LLM calls because the parsed resume is cached.</title></circle>
+  <circle class="c-llm-apps" cx="0.054" cy="0.295" r="0.032"><title>HireMeAI streams its replies and keeps a 10-message chat window.</title></circle>
+  <circle class="c-llm-apps" cx="0.045" cy="0.412" r="0.032"><title>HireMeAI calls Groq with the openai/gpt-oss-120b model.</title></circle>
+  <circle class="c-llm-apps" cx="-0.16" cy="-0.021" r="0.032"><title>Pydantic models enforce the structured output schema.</title></circle>
+  <circle class="c-llm-apps" cx="-0.284" cy="-0.125" r="0.032"><title>gpt-oss reasoning tokens count toward the output limit, which cut off long structured outputs.</title></circle>
+  <circle class="c-llm-apps" cx="-0.352" cy="-0.073" r="0.032"><title>Groq returned 400 json_validate_failed instead of a length finish reason when output was cut off.</title></circle>
+  <circle class="c-llm-apps" cx="-0.407" cy="-0.263" r="0.032"><title>Setting max_completion_tokens explicitly fixed the truncated structured outputs.</title></circle>
+  <circle class="c-llm-apps" cx="-0.087" cy="0.004" r="0.032"><title>My phone number is withheld from the model.</title></circle>
+  <circle class="c-llm-apps" cx="-0.027" cy="0.333" r="0.032"><title>HireMeAI has defenses against prompt injection and XSS.</title></circle>
+  <circle class="c-llm-apps" cx="0.283" cy="0.491" r="0.032"><title>The HireMeAI frontend is built with React and Vite.</title></circle>
+  <circle class="c-llm-apps" cx="0.622" cy="-0.406" r="0.032"><title>MealTime generates recipes with Gemini and falls back to Groq.</title></circle>
+  <circle class="c-llm-apps" cx="0.767" cy="-0.334" r="0.032"><title>MealTime can remix a recipe with AI.</title></circle>
+  <circle class="c-llm-apps" cx="0.809" cy="-0.363" r="0.032"><title>MealTime plans meals across several days with AI.</title></circle>
+  <circle class="c-llm-apps" cx="-0.007" cy="0.156" r="0.032"><title>FastAPI serves the Python backends for YT Lecture RAG and HireMeAI.</title></circle>
+  <circle class="c-llm-apps" cx="0.343" cy="0.423" r="0.032"><title>I work with the Groq and Gemini APIs.</title></circle>
+  <circle class="c-android" cx="1.0" cy="-0.382" r="0.032"><title>MealTime is an AI recipe and meal-planning Android app.</title></circle>
+  <circle class="c-android" cx="0.795" cy="-0.417" r="0.032"><title>MealTime is written in Kotlin with Jetpack Compose.</title></circle>
+  <circle class="c-android" cx="0.701" cy="-0.438" r="0.032"><title>MealTime follows MVVM with Clean Architecture.</title></circle>
+  <circle class="c-android" cx="0.585" cy="-0.334" r="0.032"><title>Hilt handles dependency injection in MealTime.</title></circle>
+  <circle class="c-android" cx="0.778" cy="-0.415" r="0.032"><title>A 5-table Room cache keeps MealTime recipes available offline.</title></circle>
+  <circle class="c-android" cx="0.889" cy="-0.485" r="0.032"><title>MealTime ships a bundled offline fallback for recipes.</title></circle>
+  <circle class="c-android" cx="0.871" cy="-0.571" r="0.032"><title>MealTime has recipe search, a cooking mode and favorites.</title></circle>
+  <circle class="c-android" cx="0.785" cy="-0.718" r="0.032"><title>The MealTime shopping list is grouped by recipe.</title></circle>
+  <circle class="c-android" cx="0.803" cy="-0.31" r="0.032"><title>MealTime subscriptions use Play Billing 7.</title></circle>
+  <circle class="c-android" cx="0.904" cy="-0.118" r="0.032"><title>Firebase Auth, Firestore and Crashlytics back the MealTime app.</title></circle>
+  <circle class="c-android" cx="0.713" cy="-0.149" r="0.032"><title>Kometo is a food-delivery app built with Jetpack Compose.</title></circle>
+  <circle class="c-android" cx="0.403" cy="0.278" r="0.032"><title>Kometo uses Clean Architecture, Hilt and Firebase Auth.</title></circle>
+  <circle class="c-android" cx="0.309" cy="-0.138" r="0.032"><title>MyWishlist is an offline wishlist manager built on Room.</title></circle>
+  <circle class="c-android" cx="0.157" cy="-0.065" r="0.032"><title>MyWishlist uses Kotlin Flow with MVVM.</title></circle>
+  <circle class="c-android" cx="0.403" cy="0.225" r="0.032"><title>I build Android apps with Coroutines, Flow and Retrofit.</title></circle>
+  <circle class="c-infra" cx="0.718" cy="0.069" r="0.032"><title>MealTime&#x27;s AI requests go through a Cloudflare Worker, so no API keys ship in the APK.</title></circle>
+  <circle class="c-infra" cx="0.253" cy="0.571" r="0.032"><title>The Cloudflare Worker authenticates each request with a Firebase ID token.</title></circle>
+  <circle class="c-infra" cx="0.346" cy="0.213" r="0.032"><title>Subscriptions are enforced server-side by validating Play purchase tokens.</title></circle>
+  <circle class="c-infra" cx="0.202" cy="0.217" r="0.032"><title>A validated purchase sets a Firebase custom claim on the user.</title></circle>
+  <circle class="c-infra" cx="-0.294" cy="-0.149" r="0.032"><title>YT Lecture RAG is deployed on Vercel.</title></circle>
+  <circle class="c-infra" cx="0.138" cy="0.375" r="0.032"><title>HireMeAI runs on free hosting on Render, so the first load can take a minute.</title></circle>
+  <circle class="c-infra" cx="-0.07" cy="0.568" r="0.032"><title>HireMeAI enforces per-IP and global rate limits.</title></circle>
+  <circle class="c-infra" cx="-0.236" cy="0.411" r="0.032"><title>Only valid requests count against the HireMeAI rate limits.</title></circle>
+  <circle class="c-infra" cx="-0.036" cy="0.254" r="0.032"><title>Per-IP limits can be spoofed via X-Forwarded-For; the global cap bounds the damage.</title></circle>
+  <circle class="c-infra" cx="0.092" cy="0.298" r="0.032"><title>The DSA tracker syncs progress across devices through Supabase.</title></circle>
+  <circle class="c-infra" cx="0.087" cy="0.306" r="0.032"><title>Supabase row-level security protects each user&#x27;s synced progress.</title></circle>
+  <circle class="c-infra" cx="0.206" cy="0.781" r="0.032"><title>I work with AWS Lambda, API Gateway, SQS and DynamoDB.</title></circle>
+  <circle class="c-infra" cx="0.097" cy="0.787" r="0.032"><title>I provision cloud infrastructure with Terraform.</title></circle>
+  <circle class="c-infra" cx="0.121" cy="0.855" r="0.032"><title>I have worked with AWS EC2 and VPC networking.</title></circle>
+  <circle class="c-infra" cx="-0.156" cy="0.917" r="0.032"><title>AWS Certified CloudOps Engineer – Associate, earned in April 2026.</title></circle>
+  <circle class="c-infra" cx="-0.234" cy="0.873" r="0.032"><title>AWS Certified Data Engineer – Associate, earned in April 2026.</title></circle>
+  <circle class="c-infra" cx="-0.127" cy="0.783" r="0.032"><title>AWS Certified AI Practitioner, earned in December 2025.</title></circle>
+  <circle class="c-infra" cx="-0.083" cy="0.914" r="0.032"><title>AWS Certified Cloud Practitioner, earned in December 2025.</title></circle>
+  <circle class="c-testing" cx="-0.244" cy="0.216" r="0.032"><title>HireMeAI has 31 pytest tests with the LLM mocked.</title></circle>
+  <circle class="c-testing" cx="-0.073" cy="0.276" r="0.032"><title>The HireMeAI test suite runs in about two seconds.</title></circle>
+  <circle class="c-testing" cx="0.02" cy="0.284" r="0.032"><title>Mocking the LLM lets the HireMeAI tests run without calling the API.</title></circle>
+  <circle class="c-testing" cx="-0.179" cy="0.176" r="0.032"><title>The DSA tracker is covered by Vitest unit tests.</title></circle>
+  <circle class="c-testing" cx="-0.212" cy="-0.12" r="0.032"><title>Playwright end-to-end tests cover the DSA tracker.</title></circle>
+  <circle class="c-testing" cx="0.499" cy="-0.12" r="0.032"><title>MealTime CI runs unit tests on every push.</title></circle>
+  <circle class="c-testing" cx="0.528" cy="-0.042" r="0.032"><title>GitHub Actions builds and lints MealTime on every push.</title></circle>
+  <circle class="c-testing" cx="-0.132" cy="0.189" r="0.032"><title>I write tests with pytest, Vitest and Playwright.</title></circle>
+  <circle class="c-dsa" cx="-0.438" cy="-0.177" r="0.032"><title>The DSA Practice Tracker holds 917 problems across 23 topics.</title></circle>
+  <circle class="c-dsa" cx="-0.169" cy="-0.005" r="0.032"><title>Problems come back for review at 7, 30 and 90 days.</title></circle>
+  <circle class="c-dsa" cx="-0.164" cy="-0.177" r="0.032"><title>A failed review drops a problem to a 3-day re-check.</title></circle>
+  <circle class="c-dsa" cx="0.184" cy="0.311" r="0.032"><title>The DSA tracker is an installable, offline-first PWA.</title></circle>
+  <circle class="c-dsa" cx="0.383" cy="0.28" r="0.032"><title>Cross-device sync is optional and uses Google sign-in.</title></circle>
+  <circle class="c-dsa" cx="0.091" cy="0.095" r="0.032"><title>Progress from different devices is merged when it syncs.</title></circle>
+  <circle class="c-dsa" cx="0.132" cy="0.27" r="0.032"><title>The DSA tracker is built with React, Vite and Tailwind.</title></circle>
+  <circle class="c-dsa" cx="-0.433" cy="-0.359" r="0.032"><title>YT Lecture RAG finds where a DSA topic is explained across 68 hours of lectures.</title></circle>
+  <circle class="c-dsa" cx="-0.231" cy="0.078" r="0.032"><title>I have solved 450+ LeetCode problems.</title></circle>
+  <circle class="c-dsa" cx="-0.183" cy="0.053" r="0.032"><title>I kept a LeetCode streak of more than 100 days.</title></circle>
+  <circle class="c-dsa" cx="-0.153" cy="0.103" r="0.032"><title>I practice data structures and algorithms in C++.</title></circle>
+  <circle class="c-dsa" cx="-0.101" cy="0.124" r="0.032"><title>I was a national-level participant in the Bharatiya Antariksh Hackathon 2025.</title></circle>
+</svg>

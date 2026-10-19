@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Three clusters from the embedding map: RAG (cobalt), infra (teal), Android (plum). -->
+  <rect width="32" height="32" rx="7" fill="#1B2433"/>
+  <circle cx="11" cy="12" r="4.6" fill="#7D93F2"/>
+  <circle cx="22" cy="10.5" r="3.4" fill="#4FC1B9"/>
+  <circle cx="18.5" cy="22" r="4" fill="#C77AB8"/>
+</svg>
