@@ -1,180 +1,180 @@
+// All copy on the site comes from here. Source of truth: CLAUDE.md, Section 5.
+// Don't add facts that aren't listed there.
+
 export const personalInfo = {
-  name: "Kartik Khandelwal",
-  tagline: "Android Developer crafting smooth, modern, and high-performance mobile experiences.",
-  role: "Android Developer",
-  college: "KIET Group of Institutions",
-  branch: "B.Tech Information Technology",
-  year: "2nd Year",
-  city: "Ghaziabad, Uttar Pradesh",
-  email: "kartikkhandelwal1234589@gmail.com",
-  github: "https://github.com/kartikkh1607",
-  linkedin: "https://www.linkedin.com/in/kartik-khandelwal-a71554327/",
-  resumeText: "Available on Request",
-  about: `Passionate Android developer focused on building scalable and modern mobile
-applications using Kotlin and Jetpack Compose. I enjoy creating smooth UI/UX
-experiences with clean architecture, modern design systems, and polished animations
-inspired by Apple-level fluidity and Material You.`,
+  name: 'Kartik Khandelwal',
+  heroLine: 'I build LLM apps and measure whether they work.',
+  subLine:
+    '3rd-year B.Tech IT student at KIET Group of Institutions, Ghaziabad. Looking for a GenAI / Applied AI Engineer internship.',
+  education: {
+    school: 'KIET Group of Institutions, Ghaziabad',
+    degree: 'B.Tech, Information Technology',
+    years: '2024–2028',
+  },
+  email: 'kartikkhandelwal1234589@gmail.com',
+  github: 'https://github.com/kartikkh1607',
+  linkedin: 'https://www.linkedin.com/in/kartik-khandelwal-a71554327',
+  leetcode: 'https://leetcode.com/u/Kartik_Khandelwal_2004/',
+  resume: '/Kartik_Khandelwal_Resume.pdf',
 }
 
-export const skills = [
-  {
-    category: "Languages",
-    icon: "Code2",
-    items: ["Kotlin", "Java", "C++", "Python"],
-  },
-  {
-    category: "Android",
-    icon: "Smartphone",
-    items: [
-      "Jetpack Compose",
-      "MVVM Architecture",
-      "Clean Architecture",
-      "Navigation Compose",
-      "Material Design 3",
-    ],
-  },
-  {
-    category: "Libraries & Tools",
-    icon: "Layers",
-    items: [
-      "Retrofit & REST APIs",
-      "Room Database",
-      "Kotlin Coroutines & Flow",
-      "Hilt Dependency Injection",
-      "Firebase Authentication",
-    ],
-  },
-  {
-    category: "Other",
-    icon: "Wrench",
-    items: ["Git & GitHub", "AWS Cloud", "DSA & Problem Solving"],
-  },
-]
+export const flagship = {
+  id: 'yt-lecture-rag',
+  name: 'YT Lecture RAG',
+  live: 'https://yt-lecture-rag.vercel.app',
+  code: 'https://github.com/kartikkh1607/YTLectureRAG',
+  stack: ['Python', 'FastAPI', 'Qdrant (local)', 'fastembed (ONNX, all-MiniLM-L6-v2)', 'Groq', 'Vercel'],
+  problem:
+    'Ask a DSA question in Hinglish or English and jump to the second of the lecture where it is explained.',
+  approach: [
+    '126 YouTube DSA lectures (~68 hours) chunked into 75 s windows with 15 s overlap, 2,933 chunks in total.',
+    'A small Groq model rewrites Hinglish questions into English DSA search queries, with results cached.',
+    'Distance cutoff plus a title-word boost.',
+    "Optional grounded answer with three refusal guards: nothing survives the cutoff, the model says the excerpts don't cover it, or there is no valid citation.",
+  ],
+  finding:
+    'The English-only embedder matched Hinglish queries by language, not topic. Query rewriting fixed it.',
+  headline: { label: 'hit@5', before: '65%', after: '95%' },
+  evalCaption: '20 retrieval questions plus 8 off-topic questions, k = 5.',
+  evalColumns: ['Setup', 'hit@5', 'top-1', 'MRR', 'Refusal'],
+  evalRows: [
+    ['Baseline (no rewrite)', '65%', '~55%', '~0.59', '100%'],
+    ['+ Query rewrite', '95%', '65%', '0.77', '100%'],
+    ['+ fastembed ONNX (current)', '95%', '65%', '0.77', '100%'],
+  ],
+}
 
 export const projects = [
   {
-    id: 1,
-    name: "MyRecipe",
-    subtitle: "Recipe Browser Android App",
-    description:
-      "A modern recipe browsing app built with Jetpack Compose and Retrofit. Features recipe search, favorites management, and an automated shopping list — all powered by REST APIs with a clean Material You UI.",
-    tech: ["Kotlin", "Jetpack Compose", "Retrofit", "REST API", "MVVM"],
-    github: "https://github.com/kartikkh1607/MyrecipeApp",
-    liveDemo: null,
-    screenshot: "/myrecipe.png",
-    color: "from-teal-400 to-cyan-500",
-    accentColor: "#2dd4bf",
-    icon: "🍳",
-    featured: true,
+    id: 'hiremeai',
+    name: 'HireMeAI',
+    subtitle: 'Recruiter chatbot',
+    live: 'https://hiremeai-kartik.onrender.com',
+    liveNote: 'Free hosting: first load can take up to a minute to wake up.',
+    code: 'https://github.com/kartikkh1607/HireMeAI',
+    stack: ['Python', 'FastAPI', 'Groq (openai/gpt-oss-120b)', 'Pydantic', 'React + Vite', 'pytest', 'Render'],
+    problem:
+      'Recruiters ask about me; the bot answers only from my resume and says "not in the resume" instead of inventing.',
+    approach:
+      'The resume is parsed once into a strict JSON schema and committed as a cache keyed on file, prompt and model, so production startup makes zero LLM calls. Streaming chat with a 10-message window.',
+    evidence: {
+      type: 'checklist',
+      title: 'Hardening',
+      items: [
+        'Phone number withheld from the model',
+        'Prompt-injection and XSS defenses',
+        'Per-IP and global rate limits',
+        'Only valid requests count against limits',
+        '31 pytest tests with the LLM mocked, ~2 s',
+      ],
+      note: 'Known limitation: per-IP limits can be spoofed via X-Forwarded-For; the global cap bounds the damage.',
+    },
+    caseStudy: {
+      title: 'Debugging story: truncated structured outputs',
+      body: [
+        'gpt-oss reasoning tokens count toward the output limit, so long structured outputs got cut off.',
+        'Groq returned 400 json_validate_failed instead of finish_reason == "length", which hid the real cause.',
+        'Fix: set max_completion_tokens explicitly and commit the parsed resume, so production never re-parses it.',
+      ],
+    },
   },
   {
-    id: 2,
-    name: "MyWishlist",
-    subtitle: "Offline Wishlist Manager",
-    description:
-      "A fully offline wishlist manager with Room Database and Kotlin Flow. Supports item filtering, tagging, and real-time UI updates — no internet required. MVVM architecture keeps it clean and testable.",
-    tech: ["Kotlin", "Room Database", "Kotlin Flow", "MVVM", "Compose"],
-    github: "https://github.com/kartikkh1607/MyShoppingListApp",
-    liveDemo: null,
-    screenshot: "/mywishlist.png",
-    color: "from-violet-400 to-purple-500",
-    accentColor: "#a855f7",
-    icon: "📋",
-    featured: true,
+    id: 'mealtime',
+    name: 'MealTime',
+    subtitle: 'AI recipe and meal-planning Android app',
+    live: null,
+    code: 'https://github.com/kartikkh1607/MyrecipeApp',
+    stack: [
+      'Kotlin', 'Jetpack Compose', 'Hilt', 'Room', 'Firebase (Auth, Firestore, Crashlytics)',
+      'Gemini with Groq fallback', 'Cloudflare Workers', 'Play Billing 7', 'GitHub Actions',
+    ],
+    points: [
+      'Recipe search, cooking mode, favorites, and a shopping list grouped by recipe.',
+      'MVVM + Clean Architecture; 5-table Room cache with a bundled offline fallback.',
+      'AI recipe generation, remix and a multi-day meal planner, routed through a Cloudflare Worker authenticated with Firebase ID tokens, so no API keys ship in the APK.',
+      'Subscriptions enforced server-side by validating Play purchase tokens and setting a Firebase custom claim.',
+      'CI runs build, lint and unit tests on every push.',
+    ],
+    evidence: {
+      type: 'flow',
+      title: 'How an AI request travels',
+      steps: ['App', 'Firebase ID token', 'Cloudflare Worker', 'Gemini'],
+      fallback: 'Groq',
+    },
   },
   {
-    id: 3,
-    name: "Kometo",
-    subtitle: "Food Delivery Android App",
-    description:
-      "A scalable Zomato-inspired food delivery app with Firebase Authentication, Clean Architecture layers, reusable Compose UI components, and type-safe navigation for a production-grade experience.",
-    tech: ["Kotlin", "Firebase", "Clean Architecture", "Compose", "Hilt"],
-    github: "https://github.com/kartikkh1607",
-    liveDemo: null,
-    screenshot: "/kometo.png",
-    color: "from-orange-400 to-rose-500",
-    accentColor: "#f97316",
-    icon: "🚀",
-    featured: true,
+    id: 'dsa-tracker',
+    name: 'DSA Practice Tracker',
+    subtitle: 'Spaced-repetition PWA',
+    live: 'https://personaldsatracker.vercel.app',
+    code: 'https://github.com/kartikkh1607/personal_dsa_tracker',
+    stack: ['React', 'Vite', 'Tailwind', 'Supabase', 'Vitest', 'Playwright', 'Vercel'],
+    points: [
+      'Installable, offline-first PWA with 917 problems across 23 topics.',
+      'Spaced review at 7, 30 and 90 days; a failed review drops to a 3-day re-check.',
+      'Optional cross-device sync on Supabase: Google sign-in, row-level security, merge.',
+      'Vitest unit tests and Playwright end-to-end tests.',
+    ],
+    evidence: {
+      type: 'sequence',
+      title: 'Review schedule (days)',
+      steps: [3, 7, 30, 90],
+    },
   },
 ]
 
-export const moreProjects = [
+export const earlierWork = [
   {
-    id: 4,
-    name: "Mood Quote",
-    description: "Animated mood-based quote app with full-screen gradient backgrounds and glassmorphism UI.",
-    tech: ["Kotlin", "Compose", "Animations"],
-    github: "https://github.com/kartikkh1607",
-    icon: "💭",
-    color: "#6366f1",
+    name: 'Kometo',
+    description: 'Food-delivery app: Jetpack Compose, Clean Architecture, Hilt, Firebase Auth.',
+    code: 'https://github.com/kartikkh1607/Kometo',
   },
   {
-    id: 5,
-    name: "Unit Converter",
-    description: "Clean unit conversion app supporting length, weight, temperature, and more with instant calculations.",
-    tech: ["Kotlin", "Compose", "MVVM"],
-    github: "https://github.com/kartikkh1607",
-    icon: "⚖️",
-    color: "#0ea5e9",
-  },
-  {
-    id: 6,
-    name: "TaskFlow",
-    description: "Productivity task manager with priority queuing, due date reminders, and offline-first Room DB storage.",
-    tech: ["Kotlin", "Room", "Coroutines"],
-    github: "https://github.com/kartikkh1607",
-    icon: "✅",
-    color: "#22c55e",
+    name: 'MyWishlist',
+    description: 'Offline wishlist manager: Room, Kotlin Flow, MVVM.',
+    code: 'https://github.com/kartikkh1607/MyWishListApp',
   },
 ]
 
-export const timeline = [
+export const skills = [
   {
-    year: "2023",
-    title: "Started B.Tech — Information Technology",
-    org: "KIET Group of Institutions, Ghaziabad",
-    type: "education",
-    icon: "🎓",
-    description: "Began my engineering journey, discovering my passion for mobile development and clean code.",
+    group: 'GenAI & LLMs',
+    items: [
+      'RAG', 'prompt engineering', 'embeddings', 'vector search (Qdrant)', 'query rewriting',
+      'structured outputs (JSON Schema, Pydantic)', 'streaming', 'LLM evaluation (hit@k, MRR, golden sets)',
+      'guardrails and prompt-injection defense', 'Groq and Gemini APIs',
+    ],
   },
   {
-    year: "2024",
-    title: "Learned Android Development",
-    org: "Self-taught — Kotlin & Jetpack Compose",
-    type: "milestone",
-    icon: "📱",
-    description: "Dove deep into Kotlin, Jetpack Compose, and Android SDK. Built first real app — MyWishlist — with Room DB and MVVM.",
+    group: 'Backend & web',
+    items: ['Python', 'FastAPI', 'REST APIs', 'React', 'TypeScript/JavaScript', 'Vite', 'Tailwind'],
+  },
+  { group: 'Testing', items: ['pytest', 'Vitest', 'Playwright'] },
+  {
+    group: 'Cloud & DevOps',
+    items: [
+      'AWS (Lambda, API Gateway, SQS, DynamoDB, EC2, VPC)', 'Terraform', 'GitHub Actions',
+      'Cloudflare Workers', 'Vercel', 'Render', 'Supabase', 'Firebase',
+    ],
   },
   {
-    year: "2024",
-    title: "Explored Clean Architecture",
-    org: "Personal Projects",
-    type: "milestone",
-    icon: "🏗️",
-    description: "Adopted Clean Architecture + Hilt DI + Kotlin Flow. Built MyRecipe app with REST API integration and Retrofit.",
+    group: 'Android',
+    items: [
+      'Kotlin', 'Jetpack Compose', 'MVVM', 'Clean Architecture', 'Hilt', 'Room', 'Retrofit',
+      'Coroutines', 'Flow',
+    ],
   },
-  {
-    year: "2025",
-    title: "Started AWS Cloud Learning",
-    org: "Self-paced — AWS Certified Cloud Practitioner Path",
-    type: "learning",
-    icon: "☁️",
-    description: "Expanded beyond mobile to cloud infrastructure. Learning EC2, S3, Lambda, and cloud-native design.",
-  },
-  {
-    year: "2025",
-    title: "Open to Work",
-    org: "Seeking Internships & Freelance",
-    type: "current",
-    icon: "🟢",
-    description: "Actively looking for Android Developer internships and freelance mobile app projects.",
-  },
+  { group: 'Also', items: ['C++ (DSA)', 'Java'] },
 ]
 
-export const stats = [
-  { label: "Projects Built",   value: "9+" },
-  { label: "Primary Language", value: "Kotlin" },
-  { label: "Architecture",     value: "MVVM" },
-  { label: "Status",           value: "Open to Work" },
+export const achievements = [
+  '450+ LeetCode problems, 100+ day streak',
+  'National-level participant, Bharatiya Antariksh Hackathon 2025 (ISRO & Hack2Skill)',
+]
+
+export const certifications = [
+  { name: 'AWS Certified CloudOps Engineer – Associate', date: 'Apr 2026' },
+  { name: 'AWS Certified Data Engineer – Associate', date: 'Apr 2026' },
+  { name: 'AWS Certified AI Practitioner', date: 'Dec 2025' },
+  { name: 'AWS Certified Cloud Practitioner', date: 'Dec 2025' },
 ]
