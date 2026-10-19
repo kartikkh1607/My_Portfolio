@@ -19,6 +19,14 @@
   --plum: #8A3E7A;
   --line: #D5DAE3;
   --line-strong: #8890A0;
+  /* Map cluster colors. Keep in sync with COLORS in scripts/map/build_map.py. */
+  --map-rag: #2B4ACB;
+  --map-evals: #6B4FD0;
+  --map-llm-apps: #2F7FBF;
+  --map-android: #8A3E7A;
+  --map-infra: #1F8A84;
+  --map-testing: #5E6779;
+  --map-dsa: #1B2433;
   color-scheme: light;
 }
 
@@ -36,6 +44,13 @@
     --plum: #C77AB8;
     --line: #2B3346;
     --line-strong: #6B7590;
+    --map-rag: #7D93F2;
+    --map-evals: #A28BF2;
+    --map-llm-apps: #6FB3E8;
+    --map-android: #C77AB8;
+    --map-infra: #4FC1B9;
+    --map-testing: #9AA3B5;
+    --map-dsa: #E6E9F0;
     color-scheme: dark;
   }
 }
@@ -53,6 +68,13 @@
   --plum: #C77AB8;
   --line: #2B3346;
   --line-strong: #6B7590;
+  --map-rag: #7D93F2;
+  --map-evals: #A28BF2;
+  --map-llm-apps: #6FB3E8;
+  --map-android: #C77AB8;
+  --map-infra: #4FC1B9;
+  --map-testing: #9AA3B5;
+  --map-dsa: #E6E9F0;
   color-scheme: dark;
 }
 
@@ -189,6 +211,24 @@
     font-size: 0.875rem;
     line-height: 1.5;
     color: var(--muted);
+  }
+
+  .chip-button {
+    min-height: 2rem;
+    padding: 0.25rem 0.75rem;
+    cursor: pointer;
+    background: transparent;
+  }
+
+  .chip-button:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+
+  .chip-button[aria-pressed="true"] {
+    background: var(--cobalt);
+    border-color: var(--cobalt);
+    color: var(--on-cobalt);
   }
 
   /* Numbers in metric panels */

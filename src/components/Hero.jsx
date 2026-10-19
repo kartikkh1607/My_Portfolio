@@ -1,15 +1,16 @@
 import { Download } from 'lucide-react'
 import { personalInfo } from '../data/portfolio.js'
-import MapPlaceholder from './MapPlaceholder.jsx'
+import MapSection from './map/MapSection.jsx'
 
 export default function Hero() {
   return (
     <section
       id="top"
       aria-labelledby="hero-title"
-      className="grid items-center gap-10 pb-16 pt-8 lg:grid-cols-[1fr_1.1fr] lg:gap-12 lg:pb-24 lg:pt-16"
+      className="grid items-start gap-10 pb-16 pt-8 lg:grid-cols-[1fr_1.1fr] lg:gap-12 lg:pb-24 lg:pt-16"
     >
-      <div>
+      {/* Top-aligned so the text doesn't shift when chip results expand the map column. */}
+      <div className="lg:pt-24">
         <h1 id="hero-title" className="max-w-[16ch] text-step-3 sm:text-step-4">
           {personalInfo.heroLine}
         </h1>
@@ -24,7 +25,7 @@ export default function Hero() {
           </a>
         </div>
       </div>
-      <MapPlaceholder />
+      <MapSection />
     </section>
   )
 }

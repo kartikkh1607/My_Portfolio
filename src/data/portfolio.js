@@ -189,11 +189,3 @@ export const certifications = [
   { name: 'AWS Certified Cloud Practitioner', date: 'Dec 2025' },
 ]
 
-// Query chips under the hero map. Queries match CLAUDE.md Section 6.
-export const mapChips = [
-  { label: 'RAG', query: 'retrieval and RAG' },
-  { label: 'evals', query: 'evaluation and metrics' },
-  { label: 'Android', query: 'Android apps' },
-  { label: 'infra', query: 'cloud and infrastructure' },
-  { label: 'testing', query: 'testing' },
-]
