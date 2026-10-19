@@ -6,7 +6,9 @@ import StaticMap from './StaticMap.jsx'
 // three.js + R3F load in a separate chunk, only once the hero is on screen.
 const EmbeddingMap = lazy(() => import('../../three/EmbeddingMap.jsx'))
 
-const { points, chips } = data
+const { points, chips, meta } = data
+// Share of the embeddings' variance the 3 PCA axes keep (21% today).
+const VARIANCE_PCT = Math.round(meta.pca_explained_variance.reduce((a, b) => a + b, 0) * 100)
 
 const PROJECT_NAMES = {
   [flagship.id]: flagship.name,
@@ -38,37 +40,71 @@ function hasWebGL() {
 
 export default function MapSection() {
   const frame = useRef(null)
-  const [mode, setMode] = useState('static') // 'static' until we know 3D is OK
+  // 'off': no WebGL, reduced motion or Save-Data -> SVG only
+  // 'tap': touch or narrow screen -> SVG, plus a "View in 3D" button
+  // 'idle': desktop -> 3D chunk loads after window load, when the browser is idle
+  const [support, setSupport] = useState('off')
+  const [want3d, setWant3d] = useState(false)
+  const [seen, setSeen] = useState(false) // hero has been on screen at least once
   const [visible, setVisible] = useState(false)
   const [active, setActive] = useState(null) // active chip label
   const [hovered, setHovered] = useState(null)
   const [focused, setFocused] = useState(null)
 
-  // 3D only with WebGL, without reduced motion or Save-Data, and once visible.
-  // Off-screen, the render loop pauses (frameloop="never").
   useEffect(() => {
-    if (navigator.connection?.saveData || !hasWebGL()) return
+    const webgl = hasWebGL()
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)')
-    let io = null
+    const compact = window.matchMedia('(pointer: coarse), (max-width: 767px)')
     const decide = () => {
-      io?.disconnect()
-      if (motion.matches) return setMode('static')
-      io = new IntersectionObserver(
-        ([entry]) => {
-          setVisible(entry.isIntersecting)
-          if (entry.isIntersecting) setMode('3d')
-        },
-        { rootMargin: '100px' },
-      )
-      io.observe(frame.current)
+      if (!webgl || motion.matches || navigator.connection?.saveData) {
+        setSupport('off')
+        setWant3d(false)
+      } else {
+        setSupport(compact.matches ? 'tap' : 'idle')
+      }
     }
     decide()
     motion.addEventListener('change', decide)
+    compact.addEventListener('change', decide)
     return () => {
-      io?.disconnect()
       motion.removeEventListener('change', decide)
+      compact.removeEventListener('change', decide)
     }
   }, [])
+
+  // Desktop: request the 3D chunk only after the load event, in idle time,
+  // so it never competes with the first paint or the hero's LCP.
+  useEffect(() => {
+    if (support !== 'idle') return
+    let idle = null
+    let timer = null
+    const schedule = () => {
+      if ('requestIdleCallback' in window) idle = window.requestIdleCallback(() => setWant3d(true), { timeout: 3000 })
+      else timer = setTimeout(() => setWant3d(true), 1500)
+    }
+    if (document.readyState === 'complete') schedule()
+    else window.addEventListener('load', schedule, { once: true })
+    return () => {
+      window.removeEventListener('load', schedule)
+      if (idle !== null) window.cancelIdleCallback(idle)
+      clearTimeout(timer)
+    }
+  }, [support])
+
+  // Pause the render loop (frameloop="never") while the hero is off-screen.
+  useEffect(() => {
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        setVisible(entry.isIntersecting)
+        if (entry.isIntersecting) setSeen(true)
+      },
+      { rootMargin: '100px' },
+    )
+    io.observe(frame.current)
+    return () => io.disconnect()
+  }, [])
+
+  const show3d = support !== 'off' && want3d && seen
 
   const chip = chips.find((c) => c.label === active) ?? null
   const highlight = useMemo(() => (chip ? new Set(chip.top) : null), [chip])
@@ -106,7 +142,7 @@ export default function MapSection() {
         onBlur={() => setFocused(null)}
         className="relative h-[60vh] max-h-130 rounded-[14px] lg:h-auto lg:aspect-6/5"
       >
-        {mode === '3d' ? (
+        {show3d ? (
           <Suspense fallback={<StaticMap {...props} />}>
             <EmbeddingMap {...props} running={visible} />
           </Suspense>
@@ -133,6 +169,11 @@ export default function MapSection() {
             {c.label}
           </button>
         ))}
+        {support === 'tap' && (
+          <button type="button" className="btn btn-secondary ml-auto min-h-9 py-1 text-sm" onClick={() => setWant3d((v) => !v)}>
+            {want3d ? 'Show 2D' : 'View in 3D'}
+          </button>
+        )}
       </div>
 
       <div aria-live="polite" className="lg:min-h-[6.5rem]">
@@ -173,6 +214,9 @@ export default function MapSection() {
       <figcaption id="map-caption" className="text-sm text-muted">
         Each dot is a sentence about my work, embedded with all-MiniLM-L6-v2 (the model behind YT Lecture RAG) and
         projected to 3D with PCA.
+        <span className="mt-1 block text-xs">
+          The 3D view keeps {VARIANCE_PCT}% of the variance, so it&rsquo;s a projection, not the full space.
+        </span>
       </figcaption>
     </figure>
   )
