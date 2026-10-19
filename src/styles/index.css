@@ -3,9 +3,9 @@
 /* ── Tokens (CLAUDE.md §3) ─────────────────────────────────────────
    Light is default. Dark follows prefers-color-scheme unless the
    manual toggle has set data-theme on <html>.
-   Amber is reserved for measured results. In light mode it only
-   reaches 3:1, so amber text must be large (≥ 28px bold) and sit
-   on --surface. */
+   Amber is reserved for measured results. Light amber is #9A6110
+   (not the original #C9831F) so it clears 4.5:1 on --surface and
+   --bg at any size. */
 :root {
   --bg: #EEF1F6;
   --surface: #FFFFFF;
@@ -14,7 +14,7 @@
   --cobalt: #2B4ACB;
   --cobalt-hover: #22399F;
   --on-cobalt: #FFFFFF;
-  --amber: #C9831F;
+  --amber: #9A6110;
   --teal: #1F8A84;
   --plum: #8A3E7A;
   --line: #D5DAE3;

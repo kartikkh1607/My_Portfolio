@@ -127,12 +127,17 @@ function Points({ items }) {
 function HireMeAI({ p }) {
   const e = p.evidence
   return (
-    <article id={p.id} aria-labelledby={`${p.id}-title`} className="panel flex flex-col gap-6 p-5 sm:p-7">
+    <article
+      id={p.id}
+      aria-labelledby={`${p.id}-title`}
+      className="panel flex flex-col gap-6 p-5 sm:p-7 lg:self-start lg:[@media(min-height:900px)]:sticky lg:[@media(min-height:900px)]:top-6"
+    >
       <ProjectHeader p={p} />
       <p>{p.problem}</p>
       <p className="text-muted">{p.approach}</p>
 
-      <section aria-labelledby={`${p.id}-hardening`} className="rounded-[10px] bg-bg p-4 sm:p-5">
+      <div className="grid gap-6 md:grid-cols-[1.3fr_1fr] md:gap-8">
+      <section aria-labelledby={`${p.id}-hardening`}>
         <h4 id={`${p.id}-hardening`} className="text-step-1">{e.title}</h4>
         <ul className="mt-3 grid gap-2">
           {e.items.map((i) => (
@@ -145,10 +150,11 @@ function HireMeAI({ p }) {
         <p className="mt-4 text-sm text-muted"><span className="font-medium text-ink">Known limitation, not fixed:</span> {e.note}</p>
       </section>
 
-      <p className="flex items-baseline gap-3">
-        <span className="num text-step-4 leading-none text-amber">{e.metric.value}</span>
+      <p className="flex items-baseline gap-3 md:flex-col md:gap-2 md:border-l md:border-line md:pl-8">
+        <span className="num text-step-4 leading-none text-amber md:text-step-5">{e.metric.value}</span>
         <span className="text-muted">{e.metric.label}</span>
       </p>
+      </div>
 
       <details className="group border-t border-line pt-4">
         <summary className="cursor-pointer font-medium text-cobalt">{p.caseStudy.title}</summary>
@@ -168,7 +174,7 @@ function RequestFlow({ title, description }) {
   const label = { fill: 'var(--ink)', fontSize: 16, fontWeight: 500, textAnchor: 'middle' }
   const small = { fill: 'var(--muted)', fontSize: 14 }
   return (
-    <figure className="rounded-[10px] bg-bg p-4">
+    <figure className="rounded-[10px] border border-line bg-surface p-4">
       <svg viewBox="0 0 320 258" role="img" aria-labelledby="flow-title flow-desc" className="h-auto w-full font-sans">
         <title id="flow-title">{title}</title>
         <desc id="flow-desc">{description}</desc>
@@ -255,16 +261,24 @@ function DsaTracker({ p }) {
 
 const PANELS = { hiremeai: HireMeAI, mealtime: MealTime, 'dsa-tracker': DsaTracker }
 
+function Panel({ p }) {
+  const Component = PANELS[p.id]
+  return <Component p={p} />
+}
+
+const [wide, ...stacked] = projects
+
 export default function Projects() {
   return (
     <section id="projects" aria-labelledby="projects-title" className="py-16 lg:py-24">
       <h2 id="projects-title" className="text-step-3">Projects</h2>
       <div className="mt-8"><Flagship /></div>
-      <div className="mt-6 grid items-start gap-6 lg:grid-cols-3">
-        {projects.map((p) => {
-          const Panel = PANELS[p.id]
-          return <Panel key={p.id} p={p} />
-        })}
+      {/* HireMeAI takes ~60% on desktop; MealTime and DSA Tracker stack in the other column. */}
+      <div className="mt-6 grid gap-6 lg:grid-cols-[3fr_2fr]">
+        <Panel p={wide} />
+        <div className="flex flex-col gap-6">
+          {stacked.map((p) => <Panel key={p.id} p={p} />)}
+        </div>
       </div>
     </section>
   )
