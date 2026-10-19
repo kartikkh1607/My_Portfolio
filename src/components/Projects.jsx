@@ -1,284 +1,449 @@
-import { Check } from 'lucide-react'
-import { flagship, projects } from '../data/portfolio.js'
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { projects, moreProjects } from '../data/portfolio.js'
+import {
+  fadeUp, blurIn,
+  staggerContainer, ease, viewport
+} from '../utils/animations.js'
 
-const external = { target: '_blank', rel: 'noopener noreferrer' }
-
-function Stack({ items }) {
+function TechTag({ tech, index }) {
   return (
-    <ul className="flex flex-wrap gap-2" aria-label="Stack">
-      {items.map((s) => <li key={s} className="chip">{s}</li>)}
-    </ul>
-  )
-}
-
-// "65% → 95%": before in muted, after in amber (the only amber on a panel).
-function BeforeAfter({ before, after, size }) {
-  return (
-    <span className="num inline-flex flex-wrap items-baseline gap-x-3">
-      {before && (
-        <>
-          <span className={`text-muted ${size.before}`}>{before}</span>
-          <span className={`text-muted ${size.before}`} aria-hidden="true">→</span>
-          <span className="sr-only">to</span>
-        </>
-      )}
-      <span className={`text-amber ${size.after}`}>{after}</span>
-    </span>
-  )
-}
-
-function Flagship() {
-  const p = flagship
-  return (
-    <article id={p.id} aria-labelledby={`${p.id}-title`} className="panel grid gap-10 p-5 sm:p-8 lg:grid-cols-[1.1fr_1fr] lg:p-10">
-      <div>
-        <p className="text-muted">Flagship project</p>
-        <h3 id={`${p.id}-title`} className="mt-1 text-step-3">{p.name}</h3>
-        <p className="measure mt-4 text-step-1">{p.problem}</p>
-        <div className="mt-6 flex flex-wrap gap-3">
-          <a href={p.live} {...external} className="btn btn-primary">Try the live demo</a>
-          <a href={p.code} {...external} className="btn btn-secondary">Code</a>
-        </div>
-
-        <h4 className="mt-8 text-step-1">How it works</h4>
-        <ul className="measure mt-2 grid gap-2 pl-5 [list-style:disc] marker:text-muted">
-          {p.approach.map((a) => <li key={a}>{a}</li>)}
-        </ul>
-
-        <div className="measure mt-6 border-l-2 border-cobalt pl-4">
-          <h4 className="text-step-0">What I found</h4>
-          <p className="mt-1">{p.finding}</p>
-        </div>
-
-        <div className="mt-8"><Stack items={p.stack} /></div>
-      </div>
-
-      <div className="lg:border-l lg:border-line lg:pl-10">
-        <p className="text-muted">{p.headline.label}, before and after query rewriting</p>
-        <p className="mt-1 leading-none">
-          <BeforeAfter
-            before={p.headline.before}
-            after={p.headline.after}
-            size={{ before: 'text-step-3', after: 'text-step-4 sm:text-step-5' }}
-          />
-        </p>
-
-        <dl className="mt-6 grid gap-4 border-y border-line py-4 sm:grid-cols-2">
-          {p.secondary.map((m) => (
-            <div key={m.label}>
-              <dt className="text-sm text-muted">{m.label}</dt>
-              <dd className="mt-1 leading-none">
-                <BeforeAfter before={m.before} after={m.after} size={{ before: 'text-step-1', after: 'text-step-2' }} />
-              </dd>
-            </div>
-          ))}
-        </dl>
-
-        <div className="mt-6 overflow-x-auto">
-          <table className="w-full border-collapse text-left text-[0.9375rem] [font-variant-numeric:tabular-nums]">
-            <caption className="pb-3 text-left text-sm text-muted">{p.evalCaption}</caption>
-            <thead>
-              <tr className="border-b border-line">
-                {p.evalColumns.map((c, i) => (
-                  <th key={c} scope="col" className={`py-2 font-medium text-muted ${i ? 'pl-3 text-right' : 'pr-2'}`}>{c}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {p.evalRows.map(([setup, ...vals], r) => {
-                const current = r === p.evalRows.length - 1
-                return (
-                  <tr key={setup} className={`border-b border-line last:border-0 ${current ? 'font-medium' : ''}`}>
-                    <th scope="row" className={`py-2 pr-2 ${current ? 'font-medium' : 'font-normal'}`}>{setup}</th>
-                    {vals.map((v, i) => <td key={i} className="py-2 pl-3 text-right">{v}</td>)}
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </article>
-  )
-}
-
-function ProjectHeader({ p }) {
-  return (
-    <header>
-      <h3 id={`${p.id}-title`} className="text-step-2">{p.name}</h3>
-      <p className="mt-1 text-muted">{p.subtitle}</p>
-      <p className="mt-3 flex flex-wrap gap-x-5 gap-y-1">
-        {p.live && <a href={p.live} {...external}>Live demo</a>}
-        <a href={p.code} {...external}>Code</a>
-      </p>
-      {p.liveNote && <p className="mt-1 text-sm text-muted">{p.liveNote}</p>}
-    </header>
-  )
-}
-
-function Points({ items }) {
-  return (
-    <ul className="grid gap-2 pl-5 [list-style:disc] marker:text-muted">
-      {items.map((pt) => <li key={pt}>{pt}</li>)}
-    </ul>
-  )
-}
-
-function HireMeAI({ p }) {
-  const e = p.evidence
-  return (
-    <article
-      id={p.id}
-      aria-labelledby={`${p.id}-title`}
-      className="panel flex flex-col gap-6 p-5 sm:p-7 lg:self-start lg:[@media(min-height:900px)]:sticky lg:[@media(min-height:900px)]:top-6"
+    <motion.span
+      initial={{ opacity: 0, scale: 0.85 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={viewport}
+      transition={{ delay: 0.15 + index * 0.05, ease: ease.outExpo }}
+      whileHover={{
+        scale:       1.08,
+        y:           -2,
+        color:       '#2dd4bf',
+        borderColor: 'rgba(45,212,191,0.35)',
+        background:  'rgba(45,212,191,0.06)',
+        transition:  { duration: 0.15 },
+      }}
+      className="tag cursor-default"
     >
-      <ProjectHeader p={p} />
-      <p>{p.problem}</p>
-      <p className="text-muted">{p.approach}</p>
-
-      <div className="grid gap-6 md:grid-cols-[1.3fr_1fr] md:gap-8">
-      <section aria-labelledby={`${p.id}-hardening`}>
-        <h4 id={`${p.id}-hardening`} className="text-step-1">{e.title}</h4>
-        <ul className="mt-3 grid gap-2">
-          {e.items.map((i) => (
-            <li key={i} className="flex gap-2">
-              <Check size={20} className="mt-0.5 shrink-0 text-cobalt" aria-hidden="true" />
-              {i}
-            </li>
-          ))}
-        </ul>
-        <p className="mt-4 text-sm text-muted"><span className="font-medium text-ink">Known limitation, not fixed:</span> {e.note}</p>
-      </section>
-
-      <p className="flex items-baseline gap-3 md:flex-col md:gap-2 md:border-l md:border-line md:pl-8">
-        <span className="num text-step-4 leading-none text-amber md:text-step-5">{e.metric.value}</span>
-        <span className="text-muted">{e.metric.label}</span>
-      </p>
-      </div>
-
-      <details className="group border-t border-line pt-4">
-        <summary className="cursor-pointer font-medium text-cobalt">{p.caseStudy.title}</summary>
-        <div className="mt-3 grid gap-2">
-          {p.caseStudy.body.map((b) => <p key={b}>{b}</p>)}
-        </div>
-      </details>
-
-      <div className="mt-auto"><Stack items={p.stack} /></div>
-    </article>
+      {tech}
+    </motion.span>
   )
 }
 
-// App → Firebase ID token → Cloudflare Worker → Gemini (fallback: Groq)
-function RequestFlow({ title, description }) {
-  const box = { fill: 'var(--surface)', strokeWidth: 1.5, rx: 6 }
-  const label = { fill: 'var(--ink)', fontSize: 16, fontWeight: 500, textAnchor: 'middle' }
-  const small = { fill: 'var(--muted)', fontSize: 14 }
+function ProjectCard({ project, index }) {
+  const [imgError, setImgError] = useState(false)
+
   return (
-    <figure className="rounded-[10px] border border-line bg-surface p-4">
-      <svg viewBox="0 0 320 258" role="img" aria-labelledby="flow-title flow-desc" className="h-auto w-full font-sans">
-        <title id="flow-title">{title}</title>
-        <desc id="flow-desc">{description}</desc>
-        <defs>
-          <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-            <path d="M0 0 L10 5 L0 10 z" fill="var(--muted)" />
-          </marker>
-        </defs>
+    <motion.div
+      variants={fadeUp}
+      initial="hidden"
+      whileInView="visible"
+      viewport={viewport}
+      className="relative rounded-3xl overflow-hidden mb-6 group"
+      style={{
+        background:     'rgba(12,26,46,0.7)',
+        border:         '1px solid rgba(30,58,82,0.7)',
+        backdropFilter: 'blur(20px)',
+      }}
+      whileHover={{
+        borderColor: `${project.accentColor}33`,
+        boxShadow:   `0 32px 80px rgba(0,0,0,0.5), 0 0 60px ${project.accentColor}0a`,
+        transition:  { duration: 0.35 },
+      }}
+    >
+      {/* Top gradient line — per-project color */}
+      <div
+        className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+        style={{
+          background: `linear-gradient(90deg, transparent 0%, ${project.accentColor}80 50%, transparent 100%)`,
+        }}
+      />
 
-        <rect x="70" y="4" width="180" height="44" stroke="var(--plum)" {...box} />
-        <text x="160" y="31" {...label}>MealTime app</text>
+      <div className="grid grid-cols-1 lg:grid-cols-5">
 
-        <line x1="160" y1="48" x2="160" y2="96" stroke="var(--muted)" strokeWidth="1.5" markerEnd="url(#arrow)" />
-        <text x="170" y="77" {...small}>Firebase ID token</text>
+        {/* Left — Content */}
+        <div className="lg:col-span-3 p-10 flex flex-col gap-7 justify-center">
 
-        <rect x="30" y="98" width="260" height="60" stroke="var(--cobalt)" {...box} />
-        <text x="160" y="123" {...label}>Cloudflare Worker</text>
-        <text x="160" y="145" {...small} textAnchor="middle">checks token, holds API keys</text>
-
-        <line x1="115" y1="158" x2="80" y2="206" stroke="var(--muted)" strokeWidth="1.5" markerEnd="url(#arrow)" />
-        <line x1="205" y1="158" x2="240" y2="206" stroke="var(--muted)" strokeWidth="1.5" strokeDasharray="5 4" markerEnd="url(#arrow)" />
-        <text x="232" y="186" {...small}>fallback</text>
-
-        <rect x="4" y="208" width="148" height="46" stroke="var(--line-strong)" {...box} />
-        <text x="78" y="236" {...label}>Gemini</text>
-        <rect x="168" y="208" width="148" height="46" stroke="var(--line-strong)" strokeDasharray="5 4" {...box} />
-        <text x="242" y="236" {...label}>Groq</text>
-      </svg>
-      <figcaption className="mt-3 text-sm text-muted">No API keys ship in the APK.</figcaption>
-    </figure>
-  )
-}
-
-function MealTime({ p }) {
-  return (
-    <article id={p.id} aria-labelledby={`${p.id}-title`} className="panel flex flex-col gap-6 border-t-4 border-t-plum p-5 sm:p-7">
-      <ProjectHeader p={p} />
-      <RequestFlow title={p.evidence.title} description={p.evidence.description} />
-      <Points items={p.points} />
-      <div className="mt-auto"><Stack items={p.stack} /></div>
-    </article>
-  )
-}
-
-function ReviewSchedule({ title, steps }) {
-  return (
-    <section aria-labelledby="schedule-title">
-      <h4 id="schedule-title" className="text-step-1">{title}</h4>
-      <div className="relative mt-4">
-      <span aria-hidden="true" className="absolute left-[12.5%] right-[12.5%] top-7 border-t-2 border-line" />
-      <ol className="relative grid grid-cols-4">
-        {steps.map((s, i) => (
-          <li key={s.days} className="relative flex flex-col items-center text-center">
-            <span
-              className={`num z-10 flex h-14 w-14 items-center justify-center rounded-full border-2 bg-surface text-step-2 ${
-                i === 0 ? 'border-dashed border-line-strong text-muted' : 'border-cobalt text-ink'
-              }`}
+          {/* Icon + Title */}
+          <div className="flex items-start gap-5">
+            <motion.div
+              className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${project.color}
+                          flex items-center justify-center text-3xl flex-shrink-0`}
+              style={{ boxShadow: `0 8px 32px ${project.accentColor}30` }}
+              whileHover={{ scale: 1.1, rotate: -6 }}
+              transition={{ duration: 0.25 }}
             >
-              {s.days}
-            </span>
-            <span className="mt-1 text-sm text-muted">days</span>
-            <span className="sr-only">: {s.label}</span>
-          </li>
-        ))}
-      </ol>
+              {project.icon}
+            </motion.div>
+            <div>
+              <p
+                className="font-mono text-2xs uppercase tracking-widest mb-1.5"
+                style={{ color: project.accentColor }}
+              >
+                {project.subtitle}
+              </p>
+              <h3
+                className="font-display font-bold text-white tracking-tight"
+                style={{ fontSize: 'clamp(1.5rem, 2.5vw, 2rem)', lineHeight: '1.1' }}
+              >
+                {project.name}
+              </h3>
+            </div>
+          </div>
+
+          {/* Description */}
+          <p
+            className="font-light leading-relaxed"
+            style={{ color: '#94a3b8', fontSize: '1rem', lineHeight: '1.8' }}
+          >
+            {project.description}
+          </p>
+
+          {/* Tech tags */}
+          <div className="flex flex-wrap gap-2">
+            {project.tech.map((t, i) => (
+              <TechTag key={t} tech={t} index={i} />
+            ))}
+          </div>
+
+          {/* CTAs */}
+          <div className="flex gap-3 pt-1 flex-wrap">
+            <motion.a
+              href={project.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary"
+              whileHover={{ scale: 1.04, y: -2 }}
+              whileTap={{  scale: 0.97 }}
+            >
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+              </svg>
+              View Code
+            </motion.a>
+
+            {/* Live Demo — only renders if URL provided */}
+            {project.liveDemo && (
+              <motion.a
+                href={project.liveDemo}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-outline"
+                whileHover={{ scale: 1.04, y: -2 }}
+                whileTap={{  scale: 0.97 }}
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+                Live Demo
+              </motion.a>
+            )}
+          </div>
+
+        </div>
+
+        {/* Right — Screenshot Panel */}
+        <div
+          className="lg:col-span-2 relative hidden lg:flex items-center
+                     justify-center p-8 overflow-hidden"
+          style={{
+            borderLeft: '1px solid rgba(30,58,82,0.5)',
+            background: 'rgba(5,13,24,0.5)',
+          }}
+        >
+          {/* Background glow orb */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: `radial-gradient(circle at center, ${project.accentColor}0c, transparent 65%)`,
+            }}
+          />
+
+          {/* Screenshot or fallback stack */}
+          {project.screenshot && !imgError ? (
+            <motion.div
+              className="relative z-10 w-full"
+              initial={{ opacity: 0, y: 16, scale: 0.95 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={viewport}
+              transition={{ delay: 0.3, duration: 0.6, ease: ease.outExpo }}
+              whileHover={{ scale: 1.03, y: -4 }}
+            >
+              {/* Device frame wrapper */}
+              <div
+                className="rounded-2xl overflow-hidden relative"
+                style={{
+                  border: `1px solid ${project.accentColor}25`,
+                  boxShadow: `0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04)`,
+                }}
+              >
+                <img
+                  src={project.screenshot}
+                  alt={`${project.name} app screenshot`}
+                  className="w-full h-auto object-cover"
+                  style={{ maxHeight: '260px', objectPosition: 'top' }}
+                  onError={() => setImgError(true)}
+                />
+                {/* Subtle overlay gradient at bottom */}
+                <div
+                  className="absolute bottom-0 left-0 right-0 h-12 pointer-events-none"
+                  style={{
+                    background: 'linear-gradient(to top, rgba(5,13,24,0.8), transparent)',
+                  }}
+                />
+              </div>
+            </motion.div>
+          ) : (
+            /* Fallback: floating stack items */
+            <div className="relative z-10 flex flex-col gap-3 w-full max-w-[200px]">
+              {project.tech.slice(0, 4).map((t, i) => (
+                <motion.div
+                  key={t}
+                  initial={{ opacity: 0, x: 24 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={viewport}
+                  transition={{ delay: 0.3 + i * 0.1, ease: ease.outExpo }}
+                  whileHover={{ x: 4 }}
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl cursor-default"
+                  style={{
+                    background:     'rgba(15,32,53,0.85)',
+                    border:         `1px solid ${project.accentColor}1a`,
+                    backdropFilter: 'blur(16px)',
+                  }}
+                >
+                  <div
+                    className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                    style={{ background: project.accentColor }}
+                  />
+                  <span className="font-mono text-xs text-white">{t}</span>
+                </motion.div>
+              ))}
+            </div>
+          )}
+        </div>
+
       </div>
-      <p className="mt-4 text-sm text-muted">
-        Days until the next review. The dashed 3 is the re-check after a failed review.
-      </p>
-    </section>
+    </motion.div>
   )
 }
 
-function DsaTracker({ p }) {
+// ── Mini project card for the "More Work" grid ────────────────────
+function MiniProjectCard({ project, index }) {
   return (
-    <article id={p.id} aria-labelledby={`${p.id}-title`} className="panel flex flex-col gap-6 p-5 sm:p-7">
-      <ProjectHeader p={p} />
-      <ReviewSchedule {...p.evidence} />
-      <Points items={p.points} />
-      <div className="mt-auto"><Stack items={p.stack} /></div>
-    </article>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={viewport}
+      transition={{ delay: 0.1 + index * 0.08, duration: 0.5, ease: ease.outExpo }}
+      className="rounded-2xl p-6 relative overflow-hidden group cursor-default"
+      style={{
+        background:     'rgba(12,26,46,0.6)',
+        border:         '1px solid rgba(30,58,82,0.7)',
+        backdropFilter: 'blur(16px)',
+      }}
+      whileHover={{
+        y:           -4,
+        borderColor: `${project.color}33`,
+        boxShadow:   `0 16px 40px rgba(0,0,0,0.4), 0 0 24px ${project.color}10`,
+        transition:  { duration: 0.2 },
+      }}
+    >
+      {/* Top shimmer */}
+      <div
+        className="absolute top-0 left-0 right-0 h-px pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        style={{
+          background: `linear-gradient(90deg, transparent, ${project.color}60, transparent)`,
+        }}
+      />
+
+      <div className="flex items-start gap-3 mb-3">
+        <div
+          className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
+          style={{
+            background: `${project.color}14`,
+            border:     `1px solid ${project.color}25`,
+          }}
+        >
+          {project.icon}
+        </div>
+        <div className="flex-1 min-w-0">
+          <h4 className="font-display font-bold text-white text-sm">{project.name}</h4>
+        </div>
+        <motion.a
+          href={project.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
+          whileHover={{ scale: 1.15 }}
+          onClick={e => e.stopPropagation()}
+          title="View on GitHub"
+        >
+          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" style={{ color: '#2dd4bf' }}>
+            <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+          </svg>
+        </motion.a>
+      </div>
+
+      <p
+        className="font-light text-xs leading-relaxed mb-4"
+        style={{ color: '#64748b', lineHeight: '1.7' }}
+      >
+        {project.description}
+      </p>
+
+      <div className="flex flex-wrap gap-1.5">
+        {project.tech.map(t => (
+          <span
+            key={t}
+            className="font-mono text-2xs px-2 py-0.5 rounded-full"
+            style={{
+              background: `${project.color}10`,
+              border:     `1px solid ${project.color}22`,
+              color:      project.color,
+              fontSize:   '0.62rem',
+            }}
+          >
+            {t}
+          </span>
+        ))}
+      </div>
+    </motion.div>
   )
 }
-
-const PANELS = { hiremeai: HireMeAI, mealtime: MealTime, 'dsa-tracker': DsaTracker }
-
-function Panel({ p }) {
-  const Component = PANELS[p.id]
-  return <Component p={p} />
-}
-
-const [wide, ...stacked] = projects
 
 export default function Projects() {
   return (
-    <section id="projects" aria-labelledby="projects-title" className="py-16 lg:py-24">
-      <h2 id="projects-title" className="text-step-3">Projects</h2>
-      <div className="mt-8"><Flagship /></div>
-      {/* HireMeAI takes ~60% on desktop; MealTime and DSA Tracker stack in the other column. */}
-      <div className="mt-6 grid gap-6 lg:grid-cols-[3fr_2fr]">
-        <Panel p={wide} />
-        <div className="flex flex-col gap-6">
-          {stacked.map((p) => <Panel key={p.id} p={p} />)}
+    <section
+      id="projects"
+      className="section-padding relative overflow-hidden"
+      style={{ background: 'rgba(5,13,24,0.6)' }}
+    >
+
+      {/* Atmosphere */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse 70% 50% at 100% 40%, rgba(45,212,191,0.04), transparent)',
+        }}
+      />
+      <div
+        className="absolute top-1/3 right-0 w-[500px] h-[500px] pointer-events-none"
+        style={{
+          background: 'radial-gradient(circle, rgba(45,212,191,0.04), transparent 70%)',
+          filter:     'blur(80px)',
+          transform:  'translate(40%, -30%)',
+        }}
+      />
+      <div
+        className="absolute bottom-0 left-0 w-[400px] h-[400px] pointer-events-none"
+        style={{
+          background: 'radial-gradient(circle, rgba(124,58,237,0.03), transparent 70%)',
+          filter:     'blur(80px)',
+          transform:  'translate(-30%, 30%)',
+        }}
+      />
+
+      <div className="max-w-6xl mx-auto relative z-10">
+
+        {/* Header */}
+        <motion.div
+          className="mb-16"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewport}
+        >
+          <motion.p variants={fadeUp} className="section-label">
+            04 — projects
+          </motion.p>
+          <motion.h2
+            variants={blurIn}
+            className="font-display font-bold tracking-tight text-white mb-4"
+            style={{ fontSize: 'clamp(2rem, 4vw, 3.25rem)', lineHeight: '1.1' }}
+          >
+            Things I've Built
+          </motion.h2>
+          <motion.p variants={fadeUp} className="section-sub">
+            Real Android projects — each built with clean architecture,
+            modern Jetpack libraries, and attention to detail.
+          </motion.p>
+        </motion.div>
+
+        {/* Featured projects */}
+        <div className="flex flex-col">
+          {projects.map((project, index) => (
+            <ProjectCard
+              key={project.id}
+              project={project}
+              index={index}
+            />
+          ))}
         </div>
+
+        {/* More projects — mini grid */}
+        <motion.div
+          className="mt-16"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={viewport}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="flex items-center gap-4 mb-8">
+            <div
+              className="h-px flex-1"
+              style={{ background: 'linear-gradient(to right, rgba(45,212,191,0.2), transparent)' }}
+            />
+            <p
+              className="font-mono text-xs uppercase tracking-widest flex-shrink-0"
+              style={{ color: '#334155' }}
+            >
+              more work
+            </p>
+            <div
+              className="h-px flex-1"
+              style={{ background: 'linear-gradient(to left, rgba(45,212,191,0.2), transparent)' }}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {moreProjects.map((project, index) => (
+              <MiniProjectCard key={project.id} project={project} index={index} />
+            ))}
+          </div>
+        </motion.div>
+
+        {/* CTA */}
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewport}
+          className="mt-14 flex flex-col items-center gap-4"
+        >
+          <div
+            className="w-px h-12"
+            style={{ background: 'linear-gradient(to bottom, rgba(45,212,191,0.3), transparent)' }}
+          />
+          <p
+            className="font-mono text-xs uppercase tracking-widest"
+            style={{ color: '#334155' }}
+          >
+            more on github
+          </p>
+          <motion.a
+            href="https://github.com/kartikkh1607"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-outline"
+            whileHover={{ scale: 1.04, y: -2 }}
+            whileTap={{  scale: 0.97 }}
+          >
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+            </svg>
+            View All on GitHub
+          </motion.a>
+        </motion.div>
+
       </div>
     </section>
   )

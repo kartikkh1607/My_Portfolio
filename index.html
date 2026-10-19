@@ -3,68 +3,35 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="color-scheme" content="light dark" />
-    <meta name="theme-color" content="#EEF1F6" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#11151D" media="(prefers-color-scheme: dark)" />
-    <!-- Apply the saved theme before first paint so the toggle never flashes the wrong theme. -->
-    <script>
-      document.documentElement.classList.add('js')
-      try {
-        var t = localStorage.getItem('theme')
-        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t
-      } catch (e) {}
-    </script>
-    <!--font-preloads-->
-
-    <title>Kartik Khandelwal: GenAI Engineer (RAG, LLM apps, evals)</title>
-    <meta name="description" content="3rd-year B.Tech IT student at KIET Group of Institutions, Ghaziabad. Looking for a GenAI / Applied AI Engineer internship. YT Lecture RAG raised hit@5 from 65% to 95%." />
+    <!-- Favicon — KK monogram in teal -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2307111f'/><text y='.88em' font-size='58' x='50%25' text-anchor='middle' fill='%232dd4bf' font-family='monospace' font-weight='bold'>K</text></svg>" />
+    <!-- Primary Meta -->
+    <title>Kartik Khandelwal — Android Developer</title>
+    <meta name="description" content="Kartik Khandelwal is a 2nd-year B.Tech IT student and Android Developer building smooth, modern apps with Kotlin, Jetpack Compose, and Clean Architecture. Open to internships and freelance." />
+    <meta name="keywords" content="Android Developer, Kotlin, Jetpack Compose, MVVM, Clean Architecture, Hilt, Firebase, Room, Portfolio, Kartik Khandelwal, KIET" />
     <meta name="author" content="Kartik Khandelwal" />
-    <link rel="canonical" href="https://my-portfolio-azure-nine-26.vercel.app/" />
-
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-
+    <!-- Open Graph / LinkedIn / WhatsApp sharing -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Kartik Khandelwal" />
-    <meta property="og:title" content="Kartik Khandelwal: GenAI Engineer (RAG, LLM apps, evals)" />
-    <meta property="og:description" content="I build LLM apps and measure whether they work. YT Lecture RAG raised hit@5 from 65% to 95%." />
+    <meta property="og:title" content="Kartik Khandelwal — Android Developer" />
+    <meta property="og:description" content="Building smooth, modern, high-performance Android apps with Kotlin & Jetpack Compose. Open to internships and freelance projects." />
     <meta property="og:url" content="https://my-portfolio-azure-nine-26.vercel.app/" />
-    <meta property="og:image" content="https://my-portfolio-azure-nine-26.vercel.app/og.png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Kartik Khandelwal: I build LLM apps and measure whether they work. hit@5 65% to 95%." />
+    <meta property="og:image" content="https://my-portfolio-azure-nine-26.vercel.app/og-preview.png" />
+    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Kartik Khandelwal: GenAI Engineer (RAG, LLM apps, evals)" />
-    <meta name="twitter:description" content="I build LLM apps and measure whether they work. YT Lecture RAG raised hit@5 from 65% to 95%." />
-    <meta name="twitter:image" content="https://my-portfolio-azure-nine-26.vercel.app/og.png" />
-    <meta name="twitter:image:alt" content="Kartik Khandelwal: I build LLM apps and measure whether they work. hit@5 65% to 95%." />
-
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "Kartik Khandelwal",
-        "url": "https://my-portfolio-azure-nine-26.vercel.app/",
-        "image": "https://my-portfolio-azure-nine-26.vercel.app/og.png",
-        "email": "mailto:kartikkhandelwal1234589@gmail.com",
-        "description": "3rd-year B.Tech IT student at KIET Group of Institutions, Ghaziabad. Looking for a GenAI / Applied AI Engineer internship.",
-        "affiliation": {
-          "@type": "CollegeOrUniversity",
-          "name": "KIET Group of Institutions",
-          "address": { "@type": "PostalAddress", "addressLocality": "Ghaziabad", "addressCountry": "IN" }
-        },
-        "knowsAbout": ["Retrieval-augmented generation", "LLM evaluation", "FastAPI", "Android development", "AWS"],
-        "sameAs": [
-          "https://github.com/kartikkh1607",
-          "https://www.linkedin.com/in/kartik-khandelwal-a71554327",
-          "https://leetcode.com/u/Kartik_Khandelwal_2004/"
-        ]
-      }
-    </script>
+    <meta name="twitter:title" content="Kartik Khandelwal — Android Developer" />
+    <meta name="twitter:description" content="Kotlin • Jetpack Compose • Clean Architecture. Open to internships." />
+    <meta name="twitter:image" content="https://my-portfolio-azure-nine-26.vercel.app/og-preview.png" />
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <div id="root"><!--app-html--></div>
+    <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

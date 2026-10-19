@@ -1,251 +1,218 @@
-@import "tailwindcss";
-
-/* ── Tokens (CLAUDE.md §3) ─────────────────────────────────────────
-   Light is default. Dark follows prefers-color-scheme unless the
-   manual toggle has set data-theme on <html>.
-   Amber is reserved for measured results. Light amber is #9A6110
-   (not the original #C9831F) so it clears 4.5:1 on --surface and
-   --bg at any size. */
-:root {
-  --bg: #EEF1F6;
-  --surface: #FFFFFF;
-  --ink: #1B2433;
-  --muted: #5E6779;
-  --cobalt: #2B4ACB;
-  --cobalt-hover: #22399F;
-  --on-cobalt: #FFFFFF;
-  --amber: #9A6110;
-  --teal: #1F8A84;
-  --plum: #8A3E7A;
-  --line: #D5DAE3;
-  --line-strong: #8890A0;
-  /* Map cluster colors. Keep in sync with COLORS in scripts/map/build_map.py. */
-  --map-rag: #2B4ACB;
-  --map-evals: #6B4FD0;
-  --map-llm-apps: #2F7FBF;
-  --map-android: #8A3E7A;
-  --map-infra: #1F8A84;
-  --map-testing: #5E6779;
-  --map-dsa: #1B2433;
-  color-scheme: light;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #11151D;
-    --surface: #1A2030;
-    --ink: #E6E9F0;
-    --muted: #9AA3B5;
-    --cobalt: #7D93F2;
-    --cobalt-hover: #9AACF5;
-    --on-cobalt: #11151D;
-    --amber: #E8A33D;
-    --teal: #4FC1B9;
-    --plum: #C77AB8;
-    --line: #2B3346;
-    --line-strong: #6B7590;
-    --map-rag: #7D93F2;
-    --map-evals: #A28BF2;
-    --map-llm-apps: #6FB3E8;
-    --map-android: #C77AB8;
-    --map-infra: #4FC1B9;
-    --map-testing: #9AA3B5;
-    --map-dsa: #E6E9F0;
-    color-scheme: dark;
-  }
-}
-
-:root[data-theme="dark"] {
-  --bg: #11151D;
-  --surface: #1A2030;
-  --ink: #E6E9F0;
-  --muted: #9AA3B5;
-  --cobalt: #7D93F2;
-  --cobalt-hover: #9AACF5;
-  --on-cobalt: #11151D;
-  --amber: #E8A33D;
-  --teal: #4FC1B9;
-  --plum: #C77AB8;
-  --line: #2B3346;
-  --line-strong: #6B7590;
-  --map-rag: #7D93F2;
-  --map-evals: #A28BF2;
-  --map-llm-apps: #6FB3E8;
-  --map-android: #C77AB8;
-  --map-infra: #4FC1B9;
-  --map-testing: #9AA3B5;
-  --map-dsa: #E6E9F0;
-  color-scheme: dark;
-}
-
-@theme inline {
-  --color-bg: var(--bg);
-  --color-surface: var(--surface);
-  --color-ink: var(--ink);
-  --color-muted: var(--muted);
-  --color-cobalt: var(--cobalt);
-  --color-amber: var(--amber);
-  --color-teal: var(--teal);
-  --color-plum: var(--plum);
-  --color-line: var(--line);
-  --color-line-strong: var(--line-strong);
-}
-
-/* Modular scale, ratio 1.333: 16 / 21 / 28 / 38 / 50 / 67 px */
-@theme {
-  --container-page: 70rem; /* 1120px */
-
-  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
-
-  --text-step-0: 1rem;
-  --text-step-0--line-height: 1.5;
-  --text-step-1: 1.3125rem;
-  --text-step-1--line-height: 1.4;
-  --text-step-2: 1.75rem;
-  --text-step-2--line-height: 1.2;
-  --text-step-3: 2.375rem;
-  --text-step-3--line-height: 1.1;
-  --text-step-4: 3.125rem;
-  --text-step-4--line-height: 1.05;
-  --text-step-5: 4.1875rem;
-  --text-step-5--line-height: 1;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @layer base {
-  html {
-    background: var(--bg);
-    -webkit-font-smoothing: antialiased;
-    text-size-adjust: 100%;
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
   }
 
-  @media (prefers-reduced-motion: no-preference) {
-    html {
-      scroll-behavior: smooth;
-    }
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
-    background: var(--bg);
-    color: var(--ink);
-    font-family: var(--font-sans);
-    font-size: 1.0625rem;
-    line-height: 1.6;
-  }
-
-  h1, h2, h3, h4 {
-    font-family: var(--font-display);
-    font-weight: 700;
-    letter-spacing: -0.015em;
-    text-wrap: balance;
-  }
-
-  a {
-    color: var(--cobalt);
-    text-decoration-line: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 3px;
-  }
-
-  a:hover {
-    text-decoration-thickness: 2px;
-  }
-
-  :focus-visible {
-    outline: 2px solid var(--cobalt);
-    outline-offset: 2px;
-    border-radius: 2px;
+    background-color: #07111f;
+    color: #e2e8f0;
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
   }
 
   ::selection {
-    background: color-mix(in srgb, var(--cobalt) 28%, transparent);
+    background-color: rgba(45, 212, 191, 0.25);
+    color: #5eead4;
+  }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background-color: #050d18; }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #2dd4bf, #0d9488);
+    border-radius: 9999px;
+  }
+
+  /* Keyboard focus styles */
+  :focus-visible {
+    outline: 2px solid rgba(45,212,191,0.6);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  /* Scan line animation for phone mockup */
+  @keyframes scan {
+    0%   { top: 0%; opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
   }
 }
 
-/* Radius encodes component type: panels 14px, chips 999px, buttons 6px. */
 @layer components {
-  .panel {
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 14px;
+
+  .section-padding {
+    @apply px-6 py-28 md:px-16 lg:px-28;
   }
 
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    min-height: 44px;
-    padding: 0.5rem 1rem;
-    border: 1px solid transparent;
-    border-radius: 6px;
-    font-weight: 500;
-    text-decoration: none;
-    cursor: pointer;
+  .section-label {
+    @apply font-mono text-xs tracking-widest uppercase mb-3;
+    color: #2dd4bf;
+  }
+
+  .section-title {
+    @apply font-display text-4xl md:text-5xl font-bold tracking-tight text-white mb-4;
+  }
+
+  .section-sub {
+    @apply text-lg font-light max-w-xl leading-relaxed;
+    color: #b8d4e3;
+  }
+
+  /* Glass card */
+  .card {
+    @apply rounded-2xl p-6 border transition-all duration-300;
+    background: rgba(15, 32, 53, 0.6);
+    border-color: rgba(30, 58, 82, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .card:hover {
+    border-color: rgba(45, 212, 191, 0.25);
+    background: rgba(15, 32, 53, 0.8);
+  }
+
+  /* Glass panel — stronger */
+  .glass {
+    background: rgba(7, 17, 31, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(45, 212, 191, 0.1);
   }
 
   .btn-primary {
-    background: var(--cobalt);
-    color: var(--on-cobalt);
+    @apply inline-flex items-center gap-2 font-sans font-semibold
+           px-6 py-3 rounded-xl transition-all duration-200;
+    background: linear-gradient(135deg, #2dd4bf, #14b8a6);
+    color: #050d18;
+    box-shadow: 0 0 20px rgba(45, 212, 191, 0.2);
   }
 
   .btn-primary:hover {
-    background: var(--cobalt-hover);
+    background: linear-gradient(135deg, #5eead4, #2dd4bf);
+    box-shadow: 0 0 30px rgba(45, 212, 191, 0.4);
+    transform: translateY(-2px);
   }
 
-  .btn-secondary {
-    border-color: var(--line-strong);
-    color: var(--ink);
-    background: transparent;
+  .btn-primary:active {
+    transform: translateY(0px) scale(0.98);
   }
 
-  .btn-secondary:hover {
-    border-color: var(--ink);
+  .btn-outline {
+    @apply inline-flex items-center gap-2 font-sans font-medium
+           px-6 py-3 rounded-xl border transition-all duration-200;
+    border-color: rgba(30, 58, 82, 0.8);
+    color: #b8d4e3;
+    background: rgba(15, 32, 53, 0.3);
+    backdrop-filter: blur(8px);
   }
 
-  .chip {
-    display: inline-flex;
-    align-items: center;
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    padding: 0.125rem 0.625rem;
-    font-size: 0.875rem;
-    line-height: 1.5;
-    color: var(--muted);
+  .btn-outline:hover {
+    border-color: rgba(45, 212, 191, 0.4);
+    color: #2dd4bf;
+    background: rgba(45, 212, 191, 0.05);
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(45, 212, 191, 0.1);
   }
 
-  .chip-button {
-    min-height: 2rem;
-    padding: 0.25rem 0.75rem;
-    cursor: pointer;
-    background: transparent;
+  .btn-outline:active {
+    transform: translateY(0px) scale(0.98);
   }
 
-  .chip-button:hover {
-    border-color: var(--ink);
-    color: var(--ink);
+  .tag {
+    @apply inline-block text-xs font-mono px-3 py-1 rounded-full border
+           transition-all duration-200;
+    background: rgba(12, 26, 46, 0.8);
+    border-color: rgba(30, 58, 82, 0.8);
+    color: #7fb3cc;
   }
 
-  .chip-button[aria-pressed="true"] {
-    background: var(--cobalt);
-    border-color: var(--cobalt);
-    color: var(--on-cobalt);
+  .tag:hover {
+    border-color: rgba(45, 212, 191, 0.3);
+    color: #2dd4bf;
+    background: rgba(45, 212, 191, 0.05);
   }
 
-  /* Numbers in metric panels */
-  .num {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
-    letter-spacing: -0.02em;
+  /* Glow border effect */
+  .glow-border {
+    position: relative;
   }
 
-  /* Controls that need JavaScript stay hidden in the no-JS / prerendered view.
-     index.html adds .js to <html> before first paint. */
-  html:not(.js) .js-only {
-    display: none !important;
+  .glow-border::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(45,212,191,0.4), transparent, rgba(45,212,191,0.1));
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
   }
 
-  .measure {
-    max-width: 70ch;
+  .glow-border:hover::before {
+    opacity: 1;
+  }
+
+}
+
+@layer utilities {
+
+  .text-gradient {
+    background: linear-gradient(135deg, #2dd4bf, #5eead4, #99f6e4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-subtle {
+    background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-grid {
+    background-image:
+      linear-gradient(rgba(45,212,191,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(45,212,191,0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  /* Atmospheric glow orbs */
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+  }
+
+  .orb-mint {
+    background: radial-gradient(circle, rgba(45,212,191,0.15), transparent 70%);
+  }
+
+  .orb-blue {
+    background: radial-gradient(circle, rgba(56,189,248,0.08), transparent 70%);
+  }
+
+  /* Noise texture overlay */
+  .noise::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    opacity: 0.4;
   }
 }
