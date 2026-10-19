@@ -1,9 +1,9 @@
 // Fails the build if the main entry chunk (the JS every visitor downloads
 // before the page is interactive) grows past 80 kB gzipped.
 //
-// The lazy EmbeddingMap chunk (three.js + R3F, ~225 kB gzip) is deliberately
-// not counted: it loads after the window load event on desktop and only on a
-// "View in 3D" tap on touch/narrow screens, so it never blocks first paint.
+// The lazy Scene chunk (three.js + R3F, ~220 kB gzip) and the Framer Motion
+// feature chunk are deliberately not counted: both load after hydration (the
+// 3D after the window load event), so they never block first paint.
 // See the comment in vite.config.js.
 import { readFileSync } from 'node:fs'
 import { gzipSync } from 'node:zlib'

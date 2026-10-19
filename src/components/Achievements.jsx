@@ -1,22 +1,26 @@
 import { achievements, certifications, personalInfo } from '../data/portfolio.js'
+import CountUp from './motion/CountUp.jsx'
+import { Reveal, RevealItem } from './motion/Reveal.jsx'
 
 export default function Achievements() {
   return (
-    <section id="achievements" aria-labelledby="achievements-title" className="py-12 lg:py-16">
-      <h2 id="achievements-title" className="text-step-2">Certifications and achievements</h2>
-      <div className="panel mt-5 p-5 sm:p-7">
+    <section id="achievements" data-scene="achievements" aria-labelledby="achievements-title" className="py-12 lg:py-20">
+      <Reveal>
+        <RevealItem as="h2" id="achievements-title" className="text-step-2">Certifications and achievements</RevealItem>
+      </Reveal>
+      <Reveal amount={0.1} className="panel mt-6 p-5 sm:p-7">
         <ul className="grid gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-4">
           {certifications.map((c) => (
-            <li key={c.name}>
+            <RevealItem as="li" key={c.name}>
               <p className="font-medium">{c.name}</p>
               <p className="text-sm text-muted">{c.date}</p>
-            </li>
+            </RevealItem>
           ))}
         </ul>
         <ul className="mt-6 grid gap-4 border-t border-line pt-6 md:grid-cols-2">
           {achievements.map((a) => (
-            <li key={a.label} className="flex items-baseline gap-3">
-              {a.value && <span className="num text-step-2 leading-none text-amber">{a.value}</span>}
+            <RevealItem as="li" key={a.label} className="flex items-baseline gap-3">
+              {a.value && <span className="num text-step-2 leading-none text-amber"><CountUp value={a.value} /></span>}
               <span>
                 {a.label}
                 {a.value && (
@@ -26,10 +30,10 @@ export default function Achievements() {
                   </>
                 )}
               </span>
-            </li>
+            </RevealItem>
           ))}
         </ul>
-      </div>
+      </Reveal>
     </section>
   )
 }

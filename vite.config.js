@@ -4,17 +4,17 @@ import tailwindcss from '@tailwindcss/vite'
 
 const CHUNK_LIMIT_KB = 500 // Vite's default chunkSizeWarningLimit
 
-// The lazy EmbeddingMap chunk is three.js + @react-three/fiber (~830 kB min,
-// ~225 kB gzip). R3F v8 registers the whole THREE namespace and three r167 is
-// a single module, so it can't be tree-shaken or split below 500 kB. It is
-// allowed to be large because it never blocks first paint: desktop loads it
-// after the window load event in idle time, touch/narrow screens only on a
-// "View in 3D" tap. The main entry is guarded by scripts/check-bundle.mjs.
+// The lazy Scene chunk (the 3D background) is three.js + @react-three/fiber
+// (~800 kB min, ~220 kB gzip). R3F v8 registers the whole THREE namespace and
+// three r167 is a single module, so it can't be tree-shaken or split below
+// 500 kB. It is allowed to be large because it never blocks first paint: it
+// loads after the window load event, in idle time. The main entry is guarded
+// by scripts/check-bundle.mjs.
 //
 // Vite's built-in size warning doesn't say which chunk tripped it, so we drop
 // that one generic message and re-apply the same 500 kB limit here to every
-// chunk except EmbeddingMap. Any other oversized chunk still warns.
-const LAZY_MAP_CHUNK = /^EmbeddingMap/
+// chunk except Scene. Any other oversized chunk still warns.
+const LAZY_MAP_CHUNK = /^Scene/
 
 function chunkSizeGuard() {
   return {
