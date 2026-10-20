@@ -4,32 +4,56 @@
 <head>
 <meta charset="utf-8">
 <style>
-  @font-face { font-family: "Bricolage Grotesque"; font-weight: 600; src: url(../../node_modules/@fontsource/bricolage-grotesque/files/bricolage-grotesque-latin-600-normal.woff2) format("woff2"); }
-  @font-face { font-family: "Bricolage Grotesque"; font-weight: 700; src: url(../../node_modules/@fontsource/bricolage-grotesque/files/bricolage-grotesque-latin-700-normal.woff2) format("woff2"); }
-  @font-face { font-family: "IBM Plex Sans"; font-weight: 400; src: url(../../node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Syne"; font-weight: 700; src: url(../../node_modules/@fontsource/syne/files/syne-latin-700-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Syne"; font-weight: 800; src: url(../../node_modules/@fontsource/syne/files/syne-latin-800-normal.woff2) format("woff2"); }
+  @font-face { font-family: "DM Sans"; font-weight: 400; src: url(../../node_modules/@fontsource/dm-sans/files/dm-sans-latin-400-normal.woff2) format("woff2"); }
+  @font-face { font-family: "DM Sans"; font-weight: 500; src: url(../../node_modules/@fontsource/dm-sans/files/dm-sans-latin-500-normal.woff2) format("woff2"); }
   * { box-sizing: border-box; margin: 0; }
-  html, body { width: 1200px; height: 630px; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  /* Night sky: the site's --bg with a violet and a cyan glow, plus a faint star field. */
   body {
-    background: #EEF1F6; color: #1B2433; font-family: "IBM Plex Sans", sans-serif;
-    display: grid; grid-template-columns: 1fr 440px; gap: 40px; padding: 64px 72px;
+    position: relative;
+    background:
+      radial-gradient(520px 420px at 82% 46%, rgba(124, 58, 237, 0.30), transparent 70%),
+      radial-gradient(420px 360px at 70% 78%, rgba(34, 211, 238, 0.16), transparent 70%),
+      radial-gradient(600px 400px at 0% 0%, rgba(167, 139, 250, 0.10), transparent 70%),
+      linear-gradient(180deg, #07111F 0%, #040A15 100%);
+    color: #E8EEF8; font-family: "DM Sans", sans-serif;
+    display: grid; grid-template-columns: 1fr 460px; gap: 24px; padding: 60px 64px 60px 72px;
   }
-  .name { font: 600 30px/1 "Bricolage Grotesque"; }
-  h1 { margin-top: 36px; font: 700 64px/1.04 "Bricolage Grotesque"; letter-spacing: -0.02em; }
-  .metric { margin-top: 44px; display: flex; align-items: baseline; gap: 18px; font-family: "Bricolage Grotesque"; font-weight: 700; font-variant-numeric: tabular-nums; }
-  .label { font: 400 24px "IBM Plex Sans"; color: #5E6779; }
-  .before { font-size: 44px; color: #5E6779; }
-  .after { font-size: 76px; color: #9A6110; line-height: 1; }
-  .sub { margin-top: 10px; font-size: 22px; color: #5E6779; }
-  .map { align-self: center; width: 440px; height: 440px; }
+  .stars { position: absolute; inset: 0; z-index: 0; }
+  body > div, .map { position: relative; z-index: 1; }
+  .name { font: 500 26px/1 "DM Sans"; color: #9DAFC9; display: flex; align-items: center; gap: 14px; }
+  .name i { width: 10px; height: 10px; border-radius: 50%; background: #22D3EE; box-shadow: 0 0 14px #22D3EE; }
+  h1 { margin-top: 34px; font: 800 62px/1.04 "Syne"; letter-spacing: -0.02em; text-shadow: 0 2px 28px rgba(4, 10, 21, 0.85); }
+  .metric { margin-top: 42px; display: flex; align-items: baseline; gap: 18px; font-family: "Syne"; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .label { font: 500 24px "DM Sans"; color: #9DAFC9; }
+  .before { font-size: 42px; color: #9DAFC9; }
+  .after { font-size: 78px; color: #FBBF24; line-height: 1; }
+  .sub { margin-top: 10px; font-size: 22px; color: #9DAFC9; }
+  .map { align-self: center; width: 460px; height: 456px; filter: drop-shadow(0 0 10px rgba(167, 139, 250, 0.35)); }
 </style>
 </head>
 <body>
+  <svg class="stars" width="1200" height="630" aria-hidden="true"></svg>
   <div>
-    <p class="name">Kartik Khandelwal</p>
+    <p class="name"><i></i>Kartik Khandelwal</p>
     <h1>I build LLM apps and measure whether they work.</h1>
     <p class="metric"><span class="label">hit@5</span><span class="before">65% →</span><span class="after">95%</span></p>
     <p class="sub">YT Lecture RAG, after query rewriting</p>
   </div>
   <img class="map" src="../../public/map-static.svg" alt="">
+  <script>
+    // Deterministic star field (seeded), so re-renders produce the same PNG.
+    let s = 7
+    const rnd = () => ((s = (s * 16807) % 2147483647) / 2147483647)
+    const svg = document.querySelector('.stars')
+    let html = ''
+    for (let i = 0; i < 140; i++) {
+      const r = rnd() < 0.9 ? 0.7 + rnd() * 0.6 : 1.4 + rnd() * 0.6
+      html += `<circle cx="${(rnd() * 1200).toFixed(1)}" cy="${(rnd() * 630).toFixed(1)}" r="${r.toFixed(2)}" fill="#E8EEF8" fill-opacity="${(0.15 + rnd() * 0.45).toFixed(2)}"/>`
+    }
+    svg.innerHTML = html
+  </script>
 </body>
 </html>
