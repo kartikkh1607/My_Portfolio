@@ -1,0 +1,121 @@
+# Sentences for the hero embedding map (CLAUDE.md §6).
+# Written only from the facts in CLAUDE.md §5. Each one is embedded with
+# all-MiniLM-L6-v2 and projected to 3D with PCA by build_map.py.
+#
+# cluster: rag | evals | llm-apps | android | infra | testing | dsa
+#   (the tag only sets the dot's color; position comes from the embedding)
+# project: id of the panel the caption links to (optional)
+#   yt-lecture-rag | hiremeai | mealtime | dsa-tracker | earlier-work
+
+sentences:
+  # ── rag ──────────────────────────────────────────────────────────
+  - { cluster: rag, project: yt-lecture-rag, text: "YT Lecture RAG searches 126 YouTube DSA lectures and jumps to the second where a topic is explained." }
+  - { cluster: rag, project: yt-lecture-rag, text: "Lecture transcripts are chunked into 75-second windows with 15 seconds of overlap." }
+  - { cluster: rag, project: yt-lecture-rag, text: "The lecture index holds 2,933 transcript chunks from about 68 hours of video." }
+  - { cluster: rag, project: yt-lecture-rag, text: "Transcript chunks are embedded with all-MiniLM-L6-v2 and stored in a local Qdrant collection." }
+  - { cluster: rag, project: yt-lecture-rag, text: "A distance cutoff drops retrieved chunks that are too far from the query." }
+  - { cluster: rag, project: yt-lecture-rag, text: "A title-word boost ranks a lecture higher when the query matches its title." }
+  - { cluster: rag, project: yt-lecture-rag, text: "A small Groq model rewrites Hinglish questions into English DSA search queries." }
+  - { cluster: rag, project: yt-lecture-rag, text: "Rewritten search queries are cached so a repeated question skips the LLM call." }
+  - { cluster: rag, project: yt-lecture-rag, text: "Ask a DSA question in Hinglish or English and land on the exact lecture timestamp." }
+  - { cluster: rag, project: yt-lecture-rag, text: "The English-only embedder matched Hinglish queries by language instead of by topic." }
+  - { cluster: rag, project: yt-lecture-rag, text: "Query rewriting fixed the mismatch between Hinglish questions and English transcripts." }
+  - { cluster: rag, project: yt-lecture-rag, text: "Embeddings run through fastembed with ONNX so lecture search fits on Vercel." }
+  - { cluster: rag, project: yt-lecture-rag, text: "Vector search over transcript chunks returns the top five candidate moments." }
+  - { cluster: rag, project: yt-lecture-rag, text: "Grounded answers are generated only from retrieved lecture excerpts." }
+  - { cluster: rag, project: yt-lecture-rag, text: "Each grounded answer has to cite the lecture excerpt it draws from." }
+
+  # ── evals ────────────────────────────────────────────────────────
+  - { cluster: evals, project: yt-lecture-rag, text: "The retrieval eval uses a golden set of 20 questions plus 8 off-topic questions." }
+  - { cluster: evals, project: yt-lecture-rag, text: "Query rewriting raised hit@5 from 65% to 95%." }
+  - { cluster: evals, project: yt-lecture-rag, text: "Mean reciprocal rank rose from about 0.59 to 0.77 after query rewriting." }
+  - { cluster: evals, project: yt-lecture-rag, text: "Top-1 accuracy went from about 55% to 65% with query rewriting." }
+  - { cluster: evals, project: yt-lecture-rag, text: "All 8 off-topic questions in the golden set are refused." }
+  - { cluster: evals, project: yt-lecture-rag, text: "Moving to fastembed ONNX left hit@5, top-1 and MRR unchanged." }
+  - { cluster: evals, project: yt-lecture-rag, text: "Retrieval quality is measured with hit@k and MRR at k = 5." }
+  - { cluster: evals, project: yt-lecture-rag, text: "The answer is refused when nothing survives the distance cutoff." }
+  - { cluster: evals, project: yt-lecture-rag, text: "The answer is refused when the model says the excerpts don't cover the question." }
+  - { cluster: evals, project: yt-lecture-rag, text: "The answer is refused when it has no valid citation." }
+  - { cluster: evals, project: yt-lecture-rag, text: "Every setup is scored against the baseline on the same golden set." }
+  - { cluster: evals, project: hiremeai, text: "HireMeAI says it is not in the resume instead of inventing an answer." }
+
+  # ── llm-apps ─────────────────────────────────────────────────────
+  - { cluster: llm-apps, project: hiremeai, text: "HireMeAI is a recruiter chatbot that answers only from my resume." }
+  - { cluster: llm-apps, project: hiremeai, text: "The resume is parsed once into a strict JSON schema." }
+  - { cluster: llm-apps, project: hiremeai, text: "The parsed resume is committed as a cache keyed on file, prompt and model." }
+  - { cluster: llm-apps, project: hiremeai, text: "Production startup makes zero LLM calls because the parsed resume is cached." }
+  - { cluster: llm-apps, project: hiremeai, text: "HireMeAI streams its replies and keeps a 10-message chat window." }
+  - { cluster: llm-apps, project: hiremeai, text: "HireMeAI calls Groq with the openai/gpt-oss-120b model." }
+  - { cluster: llm-apps, project: hiremeai, text: "Pydantic models enforce the structured output schema." }
+  - { cluster: llm-apps, project: hiremeai, text: "gpt-oss reasoning tokens count toward the output limit, which cut off long structured outputs." }
+  - { cluster: llm-apps, project: hiremeai, text: "Groq returned 400 json_validate_failed instead of a length finish reason when output was cut off." }
+  - { cluster: llm-apps, project: hiremeai, text: "Setting max_completion_tokens explicitly fixed the truncated structured outputs." }
+  - { cluster: llm-apps, project: hiremeai, text: "My phone number is withheld from the model." }
+  - { cluster: llm-apps, project: hiremeai, text: "HireMeAI has defenses against prompt injection and XSS." }
+  - { cluster: llm-apps, project: hiremeai, text: "The HireMeAI frontend is built with React and Vite." }
+  - { cluster: llm-apps, project: mealtime, text: "MealTime generates recipes with Gemini and falls back to Groq." }
+  - { cluster: llm-apps, project: mealtime, text: "MealTime can remix a recipe with AI." }
+  - { cluster: llm-apps, project: mealtime, text: "MealTime plans meals across several days with AI." }
+  - { cluster: llm-apps, text: "FastAPI serves the Python backends for YT Lecture RAG and HireMeAI." }
+  - { cluster: llm-apps, text: "I work with the Groq and Gemini APIs." }
+
+  # ── android ──────────────────────────────────────────────────────
+  - { cluster: android, project: mealtime, text: "MealTime is an AI recipe and meal-planning Android app." }
+  - { cluster: android, project: mealtime, text: "MealTime is written in Kotlin with Jetpack Compose." }
+  - { cluster: android, project: mealtime, text: "MealTime follows MVVM with Clean Architecture." }
+  - { cluster: android, project: mealtime, text: "Hilt handles dependency injection in MealTime." }
+  - { cluster: android, project: mealtime, text: "A 5-table Room cache keeps MealTime recipes available offline." }
+  - { cluster: android, project: mealtime, text: "MealTime ships a bundled offline fallback for recipes." }
+  - { cluster: android, project: mealtime, text: "MealTime has recipe search, a cooking mode and favorites." }
+  - { cluster: android, project: mealtime, text: "The MealTime shopping list is grouped by recipe." }
+  - { cluster: android, project: mealtime, text: "MealTime subscriptions use Play Billing 7." }
+  - { cluster: android, project: mealtime, text: "Firebase Auth, Firestore and Crashlytics back the MealTime app." }
+  - { cluster: android, project: earlier-work, text: "Kometo is a food-delivery app built with Jetpack Compose." }
+  - { cluster: android, project: earlier-work, text: "Kometo uses Clean Architecture, Hilt and Firebase Auth." }
+  - { cluster: android, project: earlier-work, text: "MyWishlist is an offline wishlist manager built on Room." }
+  - { cluster: android, project: earlier-work, text: "MyWishlist uses Kotlin Flow with MVVM." }
+  - { cluster: android, text: "I build Android apps with Coroutines, Flow and Retrofit." }
+
+  # ── infra ────────────────────────────────────────────────────────
+  - { cluster: infra, project: mealtime, text: "MealTime's AI requests go through a Cloudflare Worker, so no API keys ship in the APK." }
+  - { cluster: infra, project: mealtime, text: "The Cloudflare Worker authenticates each request with a Firebase ID token." }
+  - { cluster: infra, project: mealtime, text: "Subscriptions are enforced server-side by validating Play purchase tokens." }
+  - { cluster: infra, project: mealtime, text: "A validated purchase sets a Firebase custom claim on the user." }
+  - { cluster: infra, project: yt-lecture-rag, text: "YT Lecture RAG is deployed on Vercel." }
+  - { cluster: infra, project: hiremeai, text: "HireMeAI runs on free hosting on Render, so the first load can take a minute." }
+  - { cluster: infra, project: hiremeai, text: "HireMeAI enforces per-IP and global rate limits." }
+  - { cluster: infra, project: hiremeai, text: "Only valid requests count against the HireMeAI rate limits." }
+  - { cluster: infra, project: hiremeai, text: "Per-IP limits can be spoofed via X-Forwarded-For; the global cap bounds the damage." }
+  - { cluster: infra, project: dsa-tracker, text: "The DSA tracker syncs progress across devices through Supabase." }
+  - { cluster: infra, project: dsa-tracker, text: "Supabase row-level security protects each user's synced progress." }
+  - { cluster: infra, text: "I work with AWS Lambda, API Gateway, SQS and DynamoDB." }
+  - { cluster: infra, text: "I provision cloud infrastructure with Terraform." }
+  - { cluster: infra, text: "I have worked with AWS EC2 and VPC networking." }
+  - { cluster: infra, text: "AWS Certified CloudOps Engineer – Associate, earned in April 2026." }
+  - { cluster: infra, text: "AWS Certified Data Engineer – Associate, earned in April 2026." }
+  - { cluster: infra, text: "AWS Certified AI Practitioner, earned in December 2025." }
+  - { cluster: infra, text: "AWS Certified Cloud Practitioner, earned in December 2025." }
+
+  # ── testing ──────────────────────────────────────────────────────
+  - { cluster: testing, project: hiremeai, text: "HireMeAI has 31 pytest tests with the LLM mocked." }
+  - { cluster: testing, project: hiremeai, text: "The HireMeAI test suite runs in about two seconds." }
+  - { cluster: testing, project: hiremeai, text: "Mocking the LLM lets the HireMeAI tests run without calling the API." }
+  - { cluster: testing, project: dsa-tracker, text: "The DSA tracker is covered by Vitest unit tests." }
+  - { cluster: testing, project: dsa-tracker, text: "Playwright end-to-end tests cover the DSA tracker." }
+  - { cluster: testing, project: mealtime, text: "MealTime CI runs unit tests on every push." }
+  - { cluster: testing, project: mealtime, text: "GitHub Actions builds and lints MealTime on every push." }
+  - { cluster: testing, text: "I write tests with pytest, Vitest and Playwright." }
+
+  # ── dsa ──────────────────────────────────────────────────────────
+  - { cluster: dsa, project: dsa-tracker, text: "The DSA Practice Tracker holds 917 problems across 23 topics." }
+  - { cluster: dsa, project: dsa-tracker, text: "Problems come back for review at 7, 30 and 90 days." }
+  - { cluster: dsa, project: dsa-tracker, text: "A failed review drops a problem to a 3-day re-check." }
+  - { cluster: dsa, project: dsa-tracker, text: "The DSA tracker is an installable, offline-first PWA." }
+  - { cluster: dsa, project: dsa-tracker, text: "Cross-device sync is optional and uses Google sign-in." }
+  - { cluster: dsa, project: dsa-tracker, text: "Progress from different devices is merged when it syncs." }
+  - { cluster: dsa, project: dsa-tracker, text: "The DSA tracker is built with React, Vite and Tailwind." }
+  - { cluster: dsa, project: yt-lecture-rag, text: "YT Lecture RAG finds where a DSA topic is explained across 68 hours of lectures." }
+  - { cluster: dsa, text: "I have solved 450+ LeetCode problems." }
+  - { cluster: dsa, text: "I kept a LeetCode streak of more than 100 days." }
+  - { cluster: dsa, text: "I practice data structures and algorithms in C++." }
+  - { cluster: dsa, text: "I was a national-level participant in the Bharatiya Antariksh Hackathon 2025." }
