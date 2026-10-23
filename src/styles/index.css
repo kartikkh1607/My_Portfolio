@@ -1,105 +1,57 @@
 @import "tailwindcss";
 
-/* ── Tokens (CLAUDE.md §3) ─────────────────────────────────────────
-   Light is default. Dark follows prefers-color-scheme unless the
-   manual toggle has set data-theme on <html>.
-   Amber is reserved for measured results. Light amber is #9A6110
-   (not the original #C9831F) so it clears 4.5:1 on --surface and
-   --bg at any size. */
+/* ── Tokens ────────────────────────────────────────────────────────
+   One dark theme: a night-sky ground with an electric violet + cyan
+   accent pair. Amber is reserved for measured results (metric numbers).
+   Text colors are checked against --bg and the glass panel tint:
+   --ink 15:1, --muted 7.9:1, --link 11:1, --amber 11:1 on #07111F. */
 :root {
-  --bg: #EEF1F6;
-  --surface: #FFFFFF;
-  --ink: #1B2433;
-  --muted: #5E6779;
-  --cobalt: #2B4ACB;
-  --cobalt-hover: #22399F;
-  --on-cobalt: #FFFFFF;
-  --amber: #9A6110;
-  --teal: #1F8A84;
-  --plum: #8A3E7A;
-  --line: #D5DAE3;
-  --line-strong: #8890A0;
+  --bg: #07111F;
+  --bg-deep: #040A15;
+  --glass: rgba(12, 24, 44, 0.62);
+  --glass-strong: rgba(10, 20, 38, 0.8);
+  --ink: #E8EEF8;
+  --muted: #9DAFC9;
+  --violet: #A78BFA;
+  --violet-deep: #7C3AED;
+  --cyan: #22D3EE;
+  --link: #7DE3F4;
+  --amber: #FBBF24;
+  --on-accent: #07111F;
+  --line: rgba(157, 175, 201, 0.16);
+  --line-strong: rgba(157, 175, 201, 0.4);
   /* Map cluster colors. Keep in sync with COLORS in scripts/map/build_map.py. */
-  --map-rag: #2B4ACB;
-  --map-evals: #6B4FD0;
-  --map-llm-apps: #2F7FBF;
-  --map-android: #8A3E7A;
-  --map-infra: #1F8A84;
-  --map-testing: #5E6779;
-  --map-dsa: #1B2433;
-  color-scheme: light;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #11151D;
-    --surface: #1A2030;
-    --ink: #E6E9F0;
-    --muted: #9AA3B5;
-    --cobalt: #7D93F2;
-    --cobalt-hover: #9AACF5;
-    --on-cobalt: #11151D;
-    --amber: #E8A33D;
-    --teal: #4FC1B9;
-    --plum: #C77AB8;
-    --line: #2B3346;
-    --line-strong: #6B7590;
-    --map-rag: #7D93F2;
-    --map-evals: #A28BF2;
-    --map-llm-apps: #6FB3E8;
-    --map-android: #C77AB8;
-    --map-infra: #4FC1B9;
-    --map-testing: #9AA3B5;
-    --map-dsa: #E6E9F0;
-    color-scheme: dark;
-  }
-}
-
-:root[data-theme="dark"] {
-  --bg: #11151D;
-  --surface: #1A2030;
-  --ink: #E6E9F0;
-  --muted: #9AA3B5;
-  --cobalt: #7D93F2;
-  --cobalt-hover: #9AACF5;
-  --on-cobalt: #11151D;
-  --amber: #E8A33D;
-  --teal: #4FC1B9;
-  --plum: #C77AB8;
-  --line: #2B3346;
-  --line-strong: #6B7590;
-  --map-rag: #7D93F2;
-  --map-evals: #A28BF2;
-  --map-llm-apps: #6FB3E8;
-  --map-android: #C77AB8;
-  --map-infra: #4FC1B9;
-  --map-testing: #9AA3B5;
-  --map-dsa: #E6E9F0;
+  --map-rag: #22D3EE;
+  --map-evals: #A78BFA;
+  --map-llm-apps: #60A5FA;
+  --map-android: #F0ABFC;
+  --map-infra: #2DD4BF;
+  --map-testing: #94A3B8;
+  --map-dsa: #E2E8F0;
   color-scheme: dark;
 }
 
 @theme inline {
   --color-bg: var(--bg);
-  --color-surface: var(--surface);
   --color-ink: var(--ink);
   --color-muted: var(--muted);
-  --color-cobalt: var(--cobalt);
+  --color-violet: var(--violet);
+  --color-cyan: var(--cyan);
+  --color-link: var(--link);
   --color-amber: var(--amber);
-  --color-teal: var(--teal);
-  --color-plum: var(--plum);
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
 }
 
 /* Modular scale, ratio 1.333: 16 / 21 / 28 / 38 / 50 / 67 px */
 @theme {
-  --container-page: 70rem; /* 1120px */
+  --container-page: 72rem; /* 1152px */
 
-  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Syne", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
 
   --text-step-0: 1rem;
-  --text-step-0--line-height: 1.5;
+  --text-step-0--line-height: 1.55;
   --text-step-1: 1.3125rem;
   --text-step-1--line-height: 1.4;
   --text-step-2: 1.75rem;
@@ -119,8 +71,10 @@
     text-size-adjust: 100%;
   }
 
+  /* Native smooth anchor scrolling only when Lenis isn't running
+     (it sets .lenis on <html>) and the visitor allows motion. */
   @media (prefers-reduced-motion: no-preference) {
-    html {
+    html:not(.lenis) {
       scroll-behavior: smooth;
     }
   }
@@ -136,70 +90,150 @@
   h1, h2, h3, h4 {
     font-family: var(--font-display);
     font-weight: 700;
-    letter-spacing: -0.015em;
+    letter-spacing: -0.01em;
     text-wrap: balance;
+    text-shadow: 0 2px 28px rgba(4, 10, 21, 0.85);
   }
 
   a {
-    color: var(--cobalt);
+    color: var(--link);
     text-decoration-line: underline;
     text-decoration-thickness: 1px;
+    text-decoration-color: color-mix(in srgb, var(--link) 45%, transparent);
     text-underline-offset: 3px;
+    transition: text-decoration-color 0.2s;
   }
 
   a:hover {
-    text-decoration-thickness: 2px;
+    text-decoration-color: currentColor;
   }
 
   :focus-visible {
-    outline: 2px solid var(--cobalt);
-    outline-offset: 2px;
-    border-radius: 2px;
+    outline: 2px solid var(--cyan);
+    outline-offset: 3px;
+    border-radius: 4px;
   }
 
   ::selection {
-    background: color-mix(in srgb, var(--cobalt) 28%, transparent);
+    background: color-mix(in srgb, var(--violet) 40%, transparent);
+    color: #fff;
+  }
+
+  [id] {
+    scroll-margin-top: 5rem;
   }
 }
 
-/* Radius encodes component type: panels 14px, chips 999px, buttons 6px. */
 @layer components {
+  /* Glass panel: the latent space shows through, blurred. */
   .panel {
-    background: var(--surface);
+    position: relative;
+    background: var(--glass);
     border: 1px solid var(--line);
-    border-radius: 14px;
+    border-radius: 20px;
+    box-shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    backdrop-filter: blur(16px) saturate(140%);
+  }
+
+  /* Phones: a lighter blur over a denser tint. Re-blurring a large area
+     every frame of the 3D background is the most expensive thing on the page. */
+  @media (pointer: coarse), (max-width: 767px) {
+    .panel {
+      background: var(--glass-strong);
+      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(6px);
+    }
+  }
+
+  /* Cursor-following glow on project cards (position set by useTilt). */
+  .glow-hover::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+    background: radial-gradient(
+      600px circle at var(--mx, 50%) var(--my, 50%),
+      color-mix(in srgb, var(--violet) 14%, transparent),
+      color-mix(in srgb, var(--cyan) 6%, transparent) 40%,
+      transparent 70%
+    );
+  }
+
+  .glow-hover:hover::after {
+    opacity: 1;
+  }
+
+  .glow-hover:hover {
+    border-color: color-mix(in srgb, var(--violet) 35%, transparent);
+  }
+
+  /* Animated gradient border (flagship card). */
+  .gradient-border::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    padding: 1.5px;
+    border-radius: inherit;
+    pointer-events: none;
+    background: conic-gradient(
+      from var(--angle),
+      var(--violet),
+      var(--cyan) 25%,
+      rgba(34, 211, 238, 0.15) 40%,
+      rgba(167, 139, 250, 0.15) 60%,
+      var(--violet-deep) 80%,
+      var(--violet)
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    animation: border-spin 6s linear infinite paused;
+  }
+
+  .gradient-border.in-view::before {
+    animation-play-state: running;
   }
 
   .btn {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    min-height: 44px;
-    padding: 0.5rem 1rem;
+    min-height: 46px;
+    padding: 0.625rem 1.25rem;
     border: 1px solid transparent;
-    border-radius: 6px;
+    border-radius: 12px;
     font-weight: 500;
     text-decoration: none;
     cursor: pointer;
+    transition: box-shadow 0.25s, border-color 0.25s, background-color 0.25s, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .btn-primary {
-    background: var(--cobalt);
-    color: var(--on-cobalt);
+    background: linear-gradient(120deg, var(--violet), var(--cyan));
+    color: var(--on-accent);
+    box-shadow: 0 0 24px -6px color-mix(in srgb, var(--violet) 70%, transparent);
   }
 
   .btn-primary:hover {
-    background: var(--cobalt-hover);
+    box-shadow: 0 0 36px -4px color-mix(in srgb, var(--cyan) 70%, transparent);
   }
 
   .btn-secondary {
     border-color: var(--line-strong);
     color: var(--ink);
-    background: transparent;
+    background: rgba(12, 24, 44, 0.45);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
   }
 
   .btn-secondary:hover {
-    border-color: var(--ink);
+    border-color: var(--cyan);
+    box-shadow: 0 0 24px -8px color-mix(in srgb, var(--cyan) 60%, transparent);
   }
 
   .chip {
@@ -211,24 +245,41 @@
     font-size: 0.875rem;
     line-height: 1.5;
     color: var(--muted);
+    background: rgba(7, 17, 31, 0.35);
   }
 
   .chip-button {
-    min-height: 2rem;
-    padding: 0.25rem 0.75rem;
+    min-height: 2.25rem;
+    padding: 0.25rem 0.875rem;
     cursor: pointer;
-    background: transparent;
+    transition: border-color 0.2s, color 0.2s, box-shadow 0.2s, background-color 0.2s;
   }
 
   .chip-button:hover {
-    border-color: var(--ink);
+    border-color: var(--cyan);
     color: var(--ink);
   }
 
   .chip-button[aria-pressed="true"] {
-    background: var(--cobalt);
-    border-color: var(--cobalt);
-    color: var(--on-cobalt);
+    background: linear-gradient(120deg, var(--violet), var(--cyan));
+    border-color: transparent;
+    color: var(--on-accent);
+    box-shadow: 0 0 20px -4px color-mix(in srgb, var(--cyan) 70%, transparent);
+  }
+
+  .eyebrow {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--cyan);
+  }
+
+  .text-gradient {
+    background: linear-gradient(100deg, #fff 10%, var(--violet) 55%, var(--cyan) 95%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
 
   /* Numbers in metric panels */
@@ -239,13 +290,110 @@
     letter-spacing: -0.02em;
   }
 
+  .text-amber {
+    text-shadow: 0 0 28px rgba(251, 191, 36, 0.35);
+  }
+
+  .measure {
+    max-width: 68ch;
+  }
+
   /* Controls that need JavaScript stay hidden in the no-JS / prerendered view.
      index.html adds .js to <html> before first paint. */
   html:not(.js) .js-only {
     display: none !important;
   }
 
-  .measure {
-    max-width: 70ch;
+  .caret {
+    display: inline-block;
+    width: 0.55em;
+    height: 1.05em;
+    margin-left: 2px;
+    vertical-align: -0.15em;
+    background: var(--cyan);
+    box-shadow: 0 0 12px var(--cyan);
+    animation: caret 1s steps(1) infinite;
+  }
+
+  /* Hero entrance. Transform only on the text so the LCP paints on time. */
+  .rise {
+    animation: rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: var(--d, 0s);
+  }
+
+  .rise-fade {
+    animation: rise-fade 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: var(--d, 0s);
+  }
+}
+
+/* Night sky behind the 3D layer (and the whole background without WebGL). */
+.sky {
+  background:
+    radial-gradient(55% 45% at 80% 12%, rgba(124, 58, 237, 0.22), transparent 70%),
+    radial-gradient(45% 40% at 8% 88%, rgba(34, 211, 238, 0.12), transparent 70%),
+    radial-gradient(120% 85% at 50% 0%, #0C1C36 0%, var(--bg) 55%, var(--bg-deep) 100%);
+}
+
+.sky::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  background-image:
+    radial-gradient(1px 1px at 12% 22%, #fff, transparent),
+    radial-gradient(1px 1px at 68% 14%, #C4B5FD, transparent),
+    radial-gradient(1px 1px at 38% 64%, #A5F3FC, transparent),
+    radial-gradient(1px 1px at 84% 72%, #fff, transparent),
+    radial-gradient(1px 1px at 24% 86%, #C4B5FD, transparent),
+    radial-gradient(1px 1px at 92% 40%, #A5F3FC, transparent);
+  background-size: 340px 340px;
+}
+
+.veil {
+  background: radial-gradient(130% 95% at 50% 40%, transparent 50%, rgba(4, 10, 21, 0.6) 100%);
+}
+
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes border-spin {
+  to { --angle: 360deg; }
+}
+
+@keyframes caret {
+  50% { opacity: 0; }
+}
+
+@keyframes rise {
+  from { transform: translateY(18px); }
+}
+
+@keyframes rise-fade {
+  from { transform: translateY(18px); opacity: 0; }
+}
+
+/* Scroll reveals (Framer Motion) start hidden in the prerendered HTML.
+   Without JS, or with reduced motion, show everything as-is. */
+html:not(.js) [data-reveal] {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .rise, .rise-fade, .gradient-border::before, .caret {
+    animation: none;
+  }
+
+  .btn, .chip-button {
+    transition: none;
   }
 }

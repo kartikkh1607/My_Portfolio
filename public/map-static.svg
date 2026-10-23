@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-0.770 -0.838 1.890 1.875" width="600" height="595" role="img" aria-label="Embedding map: each dot is a sentence about my work, embedded with all-MiniLM-L6-v2 and projected with PCA.">
-  <style>circle{fill-opacity:.85}.c-rag{fill:#2B4ACB}.c-evals{fill:#6B4FD0}.c-llm-apps{fill:#2F7FBF}.c-android{fill:#8A3E7A}.c-infra{fill:#1F8A84}.c-testing{fill:#5E6779}.c-dsa{fill:#1B2433}@media (prefers-color-scheme: dark){.c-rag{fill:#7D93F2}.c-evals{fill:#A28BF2}.c-llm-apps{fill:#6FB3E8}.c-android{fill:#C77AB8}.c-infra{fill:#4FC1B9}.c-testing{fill:#9AA3B5}.c-dsa{fill:#E6E9F0}}</style>
+  <style>circle{fill-opacity:.9}.c-rag{fill:#22D3EE}.c-evals{fill:#A78BFA}.c-llm-apps{fill:#60A5FA}.c-android{fill:#F0ABFC}.c-infra{fill:#2DD4BF}.c-testing{fill:#94A3B8}.c-dsa{fill:#E2E8F0}</style>
   <circle class="c-rag" cx="-0.376" cy="-0.321" r="0.032"><title>YT Lecture RAG searches 126 YouTube DSA lectures and jumps to the second where a topic is explained.</title></circle>
   <circle class="c-rag" cx="-0.383" cy="-0.436" r="0.032"><title>Lecture transcripts are chunked into 75-second windows with 15 seconds of overlap.</title></circle>
   <circle class="c-rag" cx="-0.503" cy="-0.354" r="0.032"><title>The lecture index holds 2,933 transcript chunks from about 68 hours of video.</title></circle>

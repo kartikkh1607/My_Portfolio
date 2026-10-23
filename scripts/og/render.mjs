@@ -49,7 +49,7 @@ const send = (method, params = {}) => new Promise((resolve) => {
 
 async function render(url, width, height, out) {
   await send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: false })
-  await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-color-scheme', value: 'light' }] })
+  await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-color-scheme', value: 'dark' }] })
   await send('Page.navigate', { url })
   await sleep(1500) // fonts and the map SVG
   const { data } = await send('Page.captureScreenshot', { format: 'png', clip: { x: 0, y: 0, width, height, scale: 1 } })
@@ -61,7 +61,7 @@ async function render(url, width, height, out) {
 function icon(size, opaque) {
   const page = join(profile, `icon-${size}.html`)
   writeFileSync(page,
-    `<body style="margin:0;background:${opaque ? '#1B2433' : 'transparent'}">` +
+    `<body style="margin:0;background:${opaque ? '#07111F' : 'transparent'}">` +
     `<img src="${pathToFileURL(join(root, 'public/favicon.svg')).href}" width="${size}" height="${size}" style="display:block">`)
   return pathToFileURL(page).href
 }
@@ -73,6 +73,12 @@ await render(icon(32, false), 32, 32, 'public/favicon-32.png')
 await render(icon(180, true), 180, 180, 'public/apple-touch-icon.png')
 
 ws.close()
+const exited = new Promise((r) => chrome.once('exit', r))
 chrome.kill()
-await sleep(300)
-rmSync(profile, { recursive: true, force: true })
+await exited
+await sleep(500) // Chrome's child processes release the profile a moment later on Windows
+try {
+  rmSync(profile, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 })
+} catch {
+  console.warn(`could not remove temp profile ${profile}`)
+}

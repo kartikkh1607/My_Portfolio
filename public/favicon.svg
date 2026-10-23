@@ -1,7 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- Three clusters from the embedding map: RAG (cobalt), infra (teal), Android (plum). -->
-  <rect width="32" height="32" rx="7" fill="#1B2433"/>
-  <circle cx="11" cy="12" r="4.6" fill="#7D93F2"/>
-  <circle cx="22" cy="10.5" r="3.4" fill="#4FC1B9"/>
-  <circle cx="18.5" cy="22" r="4" fill="#C77AB8"/>
+  <!-- Night sky with two clusters from the embedding map: violet and cyan, plus one star. -->
+  <defs>
+    <radialGradient id="glow" cx="0.7" cy="0.3" r="0.8">
+      <stop offset="0" stop-color="#1E1550"/>
+      <stop offset="1" stop-color="#07111F"/>
+    </radialGradient>
+  </defs>
+  <rect width="32" height="32" rx="7" fill="url(#glow)"/>
+  <circle cx="11.5" cy="19" r="5.2" fill="#A78BFA"/>
+  <circle cx="21.5" cy="11" r="4" fill="#22D3EE"/>
+  <circle cx="23.5" cy="22.5" r="1.6" fill="#E8EEF8"/>
 </svg>

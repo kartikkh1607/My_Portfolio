@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Check, Copy } from 'lucide-react'
 import emailjs from '@emailjs/browser'
 import { personalInfo } from '../data/portfolio.js'
+import { useMagnetic } from '../motion/hooks.js'
+import { Reveal, RevealItem } from './motion/Reveal.jsx'
 
 const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID
 const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
@@ -23,8 +25,10 @@ function CopyEmail() {
     }
   }
 
+  const ref = useMagnetic()
+
   return (
-    <button type="button" onClick={copy} className="btn btn-secondary">
+    <button ref={ref} type="button" onClick={copy} className="btn btn-secondary">
       {copied ? <Check size={18} aria-hidden="true" /> : <Copy size={18} aria-hidden="true" />}
       <span aria-live="polite">{copied ? 'Copied' : 'Copy email'}</span>
     </button>
@@ -34,6 +38,7 @@ function CopyEmail() {
 function ContactForm() {
   const [form, setForm] = useState({ name: '', email: '', message: '' })
   const [status, setStatus] = useState('idle') // idle | sending | sent | error
+  const send = useMagnetic()
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
 
@@ -56,10 +61,10 @@ function ContactForm() {
   }
 
   const field =
-    'mt-1 block w-full rounded-md border border-line-strong bg-surface px-3 py-2.5 text-ink focus-visible:border-cobalt'
+    'mt-1 block w-full rounded-[10px] border border-line-strong bg-[rgba(4,10,21,0.6)] px-3 py-2.5 text-ink transition-colors focus-visible:border-cyan'
 
   return (
-    <form onSubmit={handleSubmit} className="js-only panel grid gap-5 p-5 sm:p-7" aria-label="Send a message">
+    <RevealItem as="form" onSubmit={handleSubmit} className="js-only panel grid gap-5 p-5 sm:p-7" aria-label="Send a message">
       <div className="grid gap-5 sm:grid-cols-2">
         <label className="font-medium">
           Name
@@ -75,7 +80,7 @@ function ContactForm() {
         <textarea name="message" rows={5} value={form.message} onChange={handleChange} required className={`${field} resize-y`} />
       </label>
       <div className="flex flex-wrap items-center gap-4">
-        <button type="submit" disabled={status === 'sending'} className="btn btn-primary disabled:opacity-60">
+        <button ref={send} type="submit" disabled={status === 'sending'} className="btn btn-primary disabled:opacity-60">
           {status === 'sending' ? 'Sending' : 'Send message'}
         </button>
         <p role="status" className="text-sm">
@@ -83,16 +88,23 @@ function ContactForm() {
           {status === 'error' && `Something went wrong. Please email me at ${personalInfo.email}.`}
         </p>
       </div>
-    </form>
+    </RevealItem>
   )
 }
 
 export default function Contact() {
   return (
-    <section id="contact" aria-labelledby="contact-title" className="grid gap-10 py-16 lg:grid-cols-[1fr_1.3fr] lg:py-24">
-      <div>
-        <h2 id="contact-title" className="text-step-3">Contact</h2>
-        <p className="mt-4 sm:text-step-1">
+    <Reveal
+      as="section"
+      id="contact"
+      data-scene="contact"
+      aria-labelledby="contact-title"
+      className="grid gap-10 py-16 lg:grid-cols-[1fr_1.3fr] lg:py-28"
+    >
+      <RevealItem>
+        <p className="eyebrow">Get in touch</p>
+        <h2 id="contact-title" className="mt-2 text-step-3 sm:text-step-4">Contact</h2>
+        <p className="mt-5 sm:text-step-1">
           <a href={`mailto:${personalInfo.email}`} className="wrap-anywhere">{personalInfo.email}</a>
         </p>
         <div className="js-only mt-4"><CopyEmail /></div>
@@ -101,8 +113,8 @@ export default function Contact() {
           <li><a href={personalInfo.github} {...external}>GitHub</a></li>
           <li><a href={personalInfo.leetcode} {...external}>LeetCode</a></li>
         </ul>
-      </div>
+      </RevealItem>
       {formEnabled && <ContactForm />}
-    </section>
+    </Reveal>
   )
 }

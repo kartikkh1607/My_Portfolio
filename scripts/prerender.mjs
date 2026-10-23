@@ -17,8 +17,8 @@ if (!template.includes('<!--app-html-->')) throw new Error('prerender: <!--app-h
 
 const assets = readdirSync(`${dist}/assets`)
 const preloads = [
-  'bricolage-grotesque-latin-700-normal', // hero headline
-  'ibm-plex-sans-latin-400-normal', // body text
+  'syne-latin-800-normal', // hero name
+  'dm-sans-latin-400-normal', // body text
 ]
   .map((name) => assets.find((f) => f.startsWith(name) && f.endsWith('.woff2')))
   .filter(Boolean)

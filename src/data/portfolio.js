@@ -4,6 +4,8 @@
 export const personalInfo = {
   name: 'Kartik Khandelwal',
   heroLine: 'I build LLM apps and measure whether they work.',
+  // Rotating line under the name in the hero.
+  roles: ['builds RAG systems', 'writes evals', 'ships LLM apps'],
   subLine:
     '3rd-year B.Tech IT student at KIET Group of Institutions, Ghaziabad. Looking for a GenAI / Applied AI Engineer internship.',
   education: {
